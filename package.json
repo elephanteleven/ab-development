@@ -1,0 +1,26 @@
+{
+  "devDependencies": {
+    "cypress": "^13.7.2",
+    "env-cmd": "^10.1.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-cypress": "^2.15.1",
+    "eslint-plugin-prettier": "^5.1.3"
+  },
+  "scripts": {
+    "build": "env-cmd bash ./build.sh guy-latest",
+    "build:prod": "env-cmd bash ./build.sh guy-prod && npm run build",
+    "cypress:open": "env-cmd cypress open --project ./test/e2e",
+    "dev:update": "bash ./dev-update.sh",
+    "start": "env-cmd docker compose up || env-cmd docker-compose up",
+    "stop": "env-cmd docker compose down || env-cmd docker-compose down",
+    "swarm:logs": "env-cmd node logs",
+    "swarm:start": "env-cmd bash ./swarm-start.sh",
+    "swarm:stop": "env-cmd bash ./swarm-stop.sh",
+    "test:e2e": "env-cmd cypress run --reporter dot --project ./test/e2e",
+    "test:e2e:ab-runtime": "env-cmd cypress run --config-file cypress.ab_runtime.mjs --reporter dot --project ./test/e2e",
+    "test:e2e:app": "env-cmd cypress run --config-file cypress.app.mjs --reporter dot --project ./test/e2e",
+    "test:e2e:ab-designer": "env-cmd cypress run --config-file cypress.plugin.ab_designer.mjs --reporter dot --project ./test/e2e",
+    "test:reset": "env-cmd bash ./test-reset.sh"
+  }
+}
