@@ -1,0 +1,536 @@
+volumes:
+  files:
+  mysql_data:
+  redis_data:
+  web_assets:
+
+networks:
+  default:
+    attachable: true
+
+services:
+  #ui_compiler: use to ui assets JS for development
+  ui_compiler:
+    image: node:$NODE_VERSION
+    volumes:
+      - type: bind
+        source: ./developer/ui
+        target: /app
+      - type: bind
+        source: ./developer/components/class_core
+        target: /app/platform_pwa/src/js/AppBuilder/core
+      - type: bind
+        source: ./developer/components/class_core
+        target: /app/platform_web/AppBuilder/core
+    working_dir: /app
+    command: bash ./start.sh
+  #/ui_compiler
+
+  #nginx setup
+  web:
+    image: docker.io/digiserve/ab-web:$AB_WEB_VERSION
+    ports:
+      - $WEB_PORT:80
+    volumes:
+      - type: bind
+        source: ./developer/services/web
+        target: /app
+      - type: bind
+        source: ./developer/ui/web/assets
+        target: /app/assets
+      - type: bind
+        source: ./developer/ui/plugins
+        target: /app/assets/ab_plugins
+      - type: bind
+        source: ./developer/services/web/default.conf
+        target: /etc/nginx/conf.d/default.conf
+      - type: bind
+        source: ./nginx/html
+        target: /usr/share/nginx/html
+      - files:/data
+    working_dir: /app
+    depends_on:
+      - api_sails
+      - ui_compiler
+   #/nginx
+
+  #db: use Maria DB as our backend DB
+  db:
+    image: docker.io/digiserve/ab-db:$AB_DB_VERSION
+    ports:
+      - $DB_PORT:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD # from .env
+      - TENANT=$CYPRESS_TENANT
+      - DB_USER=$CYPRESS_DB_USER
+      - DB_PASSWORD=$CYPRESS_DB_PASSWORD
+    volumes:
+      - type: bind
+        source: ./test/setup/reset.sh
+        target: /reset.sh
+      - type: bind
+        source: ./test/setup/reset-user.sql
+        target: /reset-user.sql
+      - type: bind
+        source: ./developer/services/db/conf.d
+        target: /etc/mysql/conf.d
+      - type: bind
+        source: ./developer/services/db/init
+        target: /docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    # on windows: use this command. (be sure to clear out mysql/data folder)
+    # command: mysqld --innodb-flush-method=littlesync --innodb-use-native-aio=OFF --log_bin=ON --wait-timeout=60 --interactive-timeout=60
+    ######
+    # when there is a problem with : Error: ER_CRASHED_ON_USAGE: Table 'AAAAAA' is marked as crashed and should be repaired
+    # this can happen with the alter table algorithm: try the safest(and slowest) COPY
+    command: ["mysqld", "--alter-algorithm=copy" , "--wait-timeout=60", "--interactive-timeout=60"]
+  #/db
+
+  #redis: use redis to allow cote services to find each other across a swarm
+  redis:
+    image: redis:$AB_REDIS_VERSION
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+  #/redis
+
+  #migration_manager: (AppBuilder) A microservice for managing Users
+  migration_manager:
+    image: docker.io/digiserve/ab-migration-manager:$AB_MIGRATION_MANAGER_VERSION
+    ports:
+      - 9229:9229
+    environment:
+      - MYSQL_PASSWORD
+    volumes:
+      - type: bind
+        source: ./developer/services/migration_manager
+        target: /app
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+    depends_on:
+      - db
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/migration_manager
+
+  #api_sails: our API end point
+  api_sails:
+    image: docker.io/digiserve/ab-api-sails:$AB_API_SAILS_VERSION
+    ports:
+      - 1337:1337
+      - 9230:9229
+    environment:
+      - AB_TESTING=true
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - NODE_ENV=development
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - CAS_ENABLED
+      - CAS_BASE_URL
+      - CAS_UUID_KEY
+      - SITE_URL
+      - OKTA_ENABLED
+      - OKTA_DOMAIN
+      - OKTA_CLIENT_ID
+      - OKTA_CLIENT_SECRET
+      # - FILE_PROCESSOR_PATH
+      # - FILE_PROCESSOR_UPLOAD_DIR
+      # - FILE_PROCESSOR_MAXBYTES
+      - RELAY_ENABLED
+      - RELAY_SERVER_TOKEN
+      - SAILS_SESSION_SECRET
+    volumes:
+      - type: bind
+        source: ./developer/services/api_sails
+        target: /app
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+      - type: bind
+        source: ./logs/appbuilder/
+        target: /var/log/appbuilder/
+      - type: bind
+        source: ./test/e2e/cypress/e2e
+        target: /app/imports
+      - files:/data
+    depends_on:
+      - redis
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app_waitMysql.js" ]
+  #/api_sails
+
+  #appbuilder: (AppBuilder) A multi-tenant aware service to process our AppBuilder requests.
+  appbuilder:
+    image: docker.io/digiserve/ab-appbuilder:$AB_APPBUILDER_VERSION
+    ports:
+      - 9231:9229
+    environment:
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - APPBUILDER_ENABLE
+      - CIRCUITBREAKER_TIMEOUT
+      - CIRCUITBREAKER_THRESHHOLD
+      - CIRCUITBREAKER_RESET
+      - NETSUITE_CONSUMER_KEY
+      - NETSUITE_CONSUMER_SECRET
+      - NETSUITE_TOKEN_KEY
+      - NETSUITE_TOKEN_SECRET
+      - NETSUITE_REALM
+      - NETSUITE_BASE_URL
+      - NETSUITE_QUERY_BASE_URL
+    volumes:
+      - type: bind
+        source: ./developer/services/appbuilder
+        target: /app
+      - type: bind
+        source: ./developer/components/platform_service
+        target: /app/AppBuilder
+      - type: bind
+        source: ./developer/components/class_core
+        target: /app/AppBuilder/core
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+    depends_on:
+      - redis
+    working_dir: /app
+    # command: npm run dev  # <-- runs nodemon and auto starts when code changes
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/appbuilder
+
+  #custom_reports: A service for custom reports.
+  custom_reports:
+    image: docker.io/digiserve/ab-custom-reports:$AB_CUSTOM_REPORTS_VERSION
+    ports:
+      - 9232:9229
+    environment:
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - CUSTOM_REPORTS_ENABLED
+    volumes:
+      - type: bind
+        source: ./developer/services/custom_reports
+        target: /app
+      - type: bind
+        source: ./developer/components/platform_service
+        target: /app/AppBuilder
+      - type: bind
+        source: ./developer/components/class_core
+        target: /app/AppBuilder/core
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+    depends_on:
+      - redis
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/custom_reports
+
+  #definition_manager: (AppBuilder) A service to manage the definitions for a running AppBuilder platform.
+  definition_manager:
+    image: docker.io/digiserve/ab-definition-manager:$AB_DEFINITION_MANAGER_VERSION
+    ports:
+      - 9233:9229
+    environment:
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - DEFINITION_MANAGER_ENABLE
+    volumes:
+      - type: bind
+        source: ./developer/services/definition_manager
+        target: /app
+      - type: bind
+        source: ./developer/components/platform_service
+        target: /app/AppBuilder
+      - type: bind
+        source: ./developer/components/class_core
+        target: /app/AppBuilder/core
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+    depends_on:
+      - redis
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/definition_manager
+
+  #file_processor: A service to manage uploaded files.
+  file_processor:
+    image: docker.io/digiserve/ab-file-processor:$AB_FILE_PROCESSOR_VERSION
+    ports:
+      - 9234:9229
+    environment:
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - FILE_PROCESSOR_ENABLE
+      # - FILE_PROCESSOR_PATH
+      # - FILE_PROCESSOR_UPLOAD_DIR
+      # - FILE_PROCESSOR_MAXBYTES
+      # - CLAMAV_ENABLED
+    volumes:
+      - type: bind
+        source: ./developer/services/file_processor
+        target: /app
+      - type: bind
+        source: ./developer/components/platform_service
+        target: /app/AppBuilder
+      - type: bind
+        source: ./developer/components/class_core
+        target: /app/AppBuilder/core
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+      - files:/data
+    depends_on:
+      - redis
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/file_processor
+
+  #log_manager: (AppBuilder) A log manager for various AB operations
+  log_manager:
+    image: docker.io/digiserve/ab-log-manager:$AB_LOG_MANAGER_VERSION
+    ports:
+      - 9235:9229
+    environment:
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - SENTRY_ENABLED
+      - SENTRY_DSN
+      - SENTRY_SAMPLE_RATE
+      - SENTRY_SERVER_NAME
+      # - SENTRY_CONFIG
+    volumes:
+      - type: bind
+        source: ./developer/services/log_manager
+        target: /app
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+    depends_on:
+      - redis
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/log_manager
+
+  #notification_email: an smtp email service
+  notification_email:
+    image: docker.io/digiserve/ab-notification-email:$AB_NOTIFICATION_EMAIL_VERSION
+    ports:
+      - 9236:9229
+    environment:
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - NOTIFICATION_EMAIL_ENABLE
+      - NOTIFICATION_EMAIL_DEFAULT
+      - SMTP_HOST
+      - SMTP_PORT
+      - SMTP_SECURE
+      # Default Auth Method is "login"
+      # specify the user/password
+      - SMTP_USER
+      - SMTP_PASSWORD
+      # For more complicated methods:
+      # - SMTP_AUTH="{ login config }"
+    volumes:
+      - type: bind
+        source: ./developer/services/notification_email
+        target: /app
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+    depends_on:
+      - redis
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/notification_email
+
+  #process_manager: (AppBuilder) a micro service to manage our process tasks
+  process_manager:
+    image: docker.io/digiserve/ab-process-manager:$AB_PROCESS_MANAGER_VERSION
+    ports:
+      - 9237:9229
+    environment:
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - NETSUITE_CONSUMER_KEY
+      - NETSUITE_CONSUMER_SECRET
+      - NETSUITE_TOKEN_KEY
+      - NETSUITE_TOKEN_SECRET
+      - NETSUITE_REALM
+      - NETSUITE_BASE_URL
+      - NETSUITE_QUERY_BASE_URL
+    volumes:
+      - type: bind
+        source: ./developer/services/process_manager
+        target: /app
+      - type: bind
+        source: ./developer/components/platform_service
+        target: /app/AppBuilder
+      - type: bind
+        source: ./developer/components/class_core
+        target: /app/AppBuilder/core
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+    depends_on:
+      - redis
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/process_manager
+
+  #relay: (Appbuilder} A service to handle the communications with our relay server.
+  relay:
+    image: docker.io/digiserve/ab-relay:$AB_RELAY_VERSION
+    ports:
+      - 9238:9229
+    environment:
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - RELAY_ENABLE
+      - RELAY_SERVER_URL
+      - RELAY_SERVER_TOKEN
+      - RELAY_POLL_FREQUENCY
+      - RELAY_MAX_PACKET_SIZE
+      - PWA_URL
+    volumes:
+      - type: bind
+        source: ./developer/services/relay
+        target: /app
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+    depends_on:
+      - redis
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/relay
+
+  #tenant_manager: (AppBuilder) A service to manage the site's tenants
+  tenant_manager:
+    image: docker.io/digiserve/ab-tenant-manager:$AB_TENANT_MANAGER_VERSION
+    ports:
+      - 9239:9229
+    environment:
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - TENANT_MANAGER_ENABLE
+      # - TENANT_MANAGER_TENANT_ID
+    volumes:
+      - type: bind
+        source: ./developer/services/tenant_manager
+        target: /app
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+    depends_on:
+      - redis
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/tenant_manager
+
+  #user_manager: (AppBuilder) A microservice for managing Users
+  user_manager:
+    image: docker.io/digiserve/ab-user-manager:$AB_USER_MANAGER_VERSION
+    ports:
+      - 9240:9229
+    environment:
+      - COTE_DISCOVERY_REDIS_HOST=redis
+      - MYSQL_PASSWORD
+      # - MYSQL_HOST
+      # - MYSQL_PORT
+      # - MYSQL_USER
+      # - MYSQL_DBPREFIX
+      # - MYSQL_DBADMIN
+      # - MYSQL_POOL_MAX
+      # - MYSQL_POOL_ACQUIRE_TIMEOUT
+      - USER_MANAGER_ENABLE
+      - USER_MANAGER_MAX_FAILED_LOGINS
+    volumes:
+      - type: bind
+        source: ./developer/services/user_manager
+        target: /app
+      - type: bind
+        source: ./developer/components/platform_service
+        target: /app/AppBuilder
+      - type: bind
+        source: ./developer/components/class_core
+        target: /app/AppBuilder/core
+      - type: bind
+        source: ./developer/libs
+        target: /app/node_modules/@digiserve
+    depends_on:
+      - redis
+    working_dir: /app
+    command: [ "node", "--inspect=0.0.0.0:9229", "--watch", "app.js" ]
+  #/user_manager

@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+
+  #nginx setup
+  web:
+    ports:
+      - "8088:80"
+
+  #db: use Maria DB as our backend DB
+  db:
+    ports:
+      - "8889:3306"
+    # NOTE: this file will be pulled into the compose files from the ROOT
+    # directory, so paths must be specified from there:
+    environment: 
+      - TENANT=$CYPRESS_TENANT
+      - DB_USER=$CYPRESS_DB_USER
+      - DB_PASSWORD=$CYPRESS_DB_PASSWORD
+    volumes:
+      - type: bind
+        source: ./test/setup/reset.sh
+        target: /reset.sh
+      - type: bind
+        source: ./test/setup/reset-user.sql
+        target: /reset-user.sql
+  #/db
+
+  #api_sails: our API end point
+  # NOTE: we look for this port to be ready before we run our tests
+  api_sails:
+    # When testing, we test our api_sails on port 1337 to verify
+    # the service is up and ready to run before continuing.
+    ports:
+      - "1337:1337"
+      # - "9229:9229"
+    environment:
+      - AB_TESTING=true
+      # AB_TESTING is an environment variable that opens up some
+      # API routes only available in our testing environment.
+    volumes:
+      - type: bind
+        source: ./test/e2e/cypress/e2e
+        target: /app/imports

@@ -1,0 +1,63 @@
+[submodule "developer/components/class_core"]
+	path = developer/components/class_core
+	url = https://github.com/CruGlobal/appbuilder_class_core.git
+[submodule "developer/components/platform_service"]
+	path = developer/components/platform_service
+	url = https://github.com/CruGlobal/appbuilder_platform_service.git
+[submodule "developer/libs/ab-utils"]
+	path = developer/libs/ab-utils
+	url = https://github.com/CruGlobal/ab-utils.git
+[submodule "developer/services/api_sails"]
+	path = developer/services/api_sails
+	url = https://github.com/CruGlobal/ab_service_api_sails.git
+[submodule "developer/services/appbuilder"]
+	path = developer/services/appbuilder
+	url = https://github.com/CruGlobal/ab_service_appbuilder.git
+[submodule "developer/services/custom_reports"]
+	path = developer/services/custom_reports
+	url = https://github.com/CruGlobal/ab_service_custom_reports.git
+[submodule "developer/services/db"]
+	path = developer/services/db
+	url = https://github.com/CruGlobal/ab_service_db.git
+[submodule "developer/services/definition_manager"]
+	path = developer/services/definition_manager
+	url = https://github.com/CruGlobal/ab_service_definition_manager.git
+[submodule "developer/services/file_processor"]
+	path = developer/services/file_processor
+	url = https://github.com/CruGlobal/ab_service_file_processor.git
+[submodule "developer/services/log_manager"]
+	path = developer/services/log_manager
+	url = https://github.com/CruGlobal/ab_service_log_manager.git
+[submodule "developer/services/migration_manager"]
+	path = developer/services/migration_manager
+	url = https://github.com/CruGlobal/ab_migration_manager.git
+[submodule "developer/services/notification_email"]
+	path = developer/services/notification_email
+	url = https://github.com/CruGlobal/ab_service_notification_email.git
+[submodule "developer/services/process_manager"]
+	path = developer/services/process_manager
+	url = https://github.com/CruGlobal/ab_service_process_manager.git
+[submodule "developer/services/relay"]
+	path = developer/services/relay
+	url = https://github.com/digi-serve/ab_service_relay.git
+[submodule "developer/services/tenant_manager"]
+	path = developer/services/tenant_manager
+	url = https://github.com/CruGlobal/ab_service_tenant_manager.git
+[submodule "developer/services/web"]
+	path = developer/services/web
+	url = https://github.com/CruGlobal/ab_service_web.git
+[submodule "developer/services/user_manager"]
+	path = developer/services/user_manager
+	url = https://github.com/CruGlobal/ab_service_user_manager.git
+[submodule "developer/ui/platform_pwa"]
+	path = developer/ui/platform_pwa
+	url = https://github.com/CruGlobal/appbuilder_platform_pwa.git
+[submodule "developer/ui/platform_web"]
+	path = developer/ui/platform_web
+	url = https://github.com/CruGlobal/ab_platform_web.git
+[submodule "developer/ui/plugins/ABDesigner"]
+	path = developer/ui/plugins/ABDesigner
+	url = https://github.com/CruGlobal/plugin_ABDesigner.git
+[submodule "developer/ui/plugins/HRTeams"]
+	path = developer/ui/plugins/HRTeams
+	url = https://github.com/CruGlobal/plugin_HRTeams.git
