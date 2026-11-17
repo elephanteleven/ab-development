@@ -1,0 +1,68 @@
+[submodule "developer/api_sails"]
+	path = developer/api_sails
+	url = https://github.com/CruGlobal/ab_service_api_sails.git
+    branch = master
+[submodule "developer/appbuilder"]
+	path = developer/appbuilder
+	url = https://github.com/CruGlobal/ab_service_appbuilder.git
+    branch = master
+[submodule "developer/custom_reports"]
+	path = developer/custom_reports
+	url = https://github.com/CruGlobal/ab_service_custom_reports.git
+    branch = master
+[submodule "developer/db"]
+	path = developer/db
+	url = https://github.com/CruGlobal/ab_service_db.git
+    branch = master
+[submodule "developer/definition_manager"]
+	path = developer/definition_manager
+	url = https://github.com/CruGlobal/ab_service_definition_manager.git
+    branch = master
+[submodule "developer/file_processor"]
+	path = developer/file_processor
+	url = https://github.com/CruGlobal/ab_service_file_processor.git
+    branch = master
+[submodule "developer/log_manager"]
+	path = developer/log_manager
+	url = https://github.com/CruGlobal/ab_service_log_manager.git
+    branch = master
+[submodule "developer/migration_manager"]
+	path = developer/migration_manager
+	url = https://github.com/CruGlobal/ab_migration_manager.git
+    branch = master
+[submodule "developer/notification_email"]
+	path = developer/notification_email
+	url = https://github.com/CruGlobal/ab_service_notification_email.git
+    branch = master
+[submodule "developer/process_manager"]
+	path = developer/process_manager
+	url = https://github.com/CruGlobal/ab_service_process_manager.git
+    branch = master
+[submodule "developer/tenant_manager"]
+	path = developer/tenant_manager
+	url = https://github.com/CruGlobal/ab_service_tenant_manager.git
+    branch = master
+[submodule "developer/web"]
+	path = developer/web
+	url = https://github.com/CruGlobal/ab_service_web.git
+    branch = develop
+[submodule "developer/user_manager"]
+	path = developer/user_manager
+	url = https://github.com/CruGlobal/ab_service_user_manager.git
+    branch = master
+[submodule "developer/pwa"]
+	path = developer/pwa
+	url = https://github.com/CruGlobal/appbuilder_platform_pwa.git
+    branch = master
+[submodule "developer/ab_platform_web"]
+	path = developer/ab_platform_web
+	url = https://github.com/CruGlobal/ab_platform_web.git
+    branch = master
+[submodule "developer/plugins/ABDesigner"]
+	path = developer/plugins/ABDesigner
+	url = https://github.com/CruGlobal/plugin_ABDesigner.git
+    branch = master
+[submodule "developer/plugins/HRTeams"]
+	path = developer/plugins/HRTeams
+	url = https://github.com/CruGlobal/plugin_HRTeams.git
+    branch = master

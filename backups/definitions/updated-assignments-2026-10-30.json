@@ -1,0 +1,3220 @@
+{
+ "note": "Updated Assignments (4bf272d1-0367-4483-9e0d-21b82b4bc366) in the local admin tenant, read from appbuilder_definition on 2026-10-30 before it was put back to the 2026-10-03 version for the GitHub #537 tests. One process row and its 17 elements (the version without the cross-entity part, made on 2026-10-03).",
+ "definitions": [
+  {
+   "id": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+   "type": "process",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Updated Assignments"
+     }
+    ],
+    "id": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "name": "Updated Assignments",
+    "xmlDefinition": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn2:definitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmn2=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" id=\"process-def-4bf272d1-0367-4483-9e0d-21b82b4bc366\" targetNamespace=\"http://bpmn.io/schema/bpmn\" xsi:schemaLocation=\"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd\"><bpmn2:process id=\"Process_1\" isExecutable=\"true\"><bpmn2:startEvent id=\"StartEvent_1\" name=\"Start\"><bpmn2:outgoing>Flow_029y8v2</bpmn2:outgoing></bpmn2:startEvent><bpmn2:exclusiveGateway id=\"Gateway_0xz4jn8\" name=\"Do Date End have value?\"><bpmn2:incoming>Flow_1scwzdl</bpmn2:incoming><bpmn2:outgoing>Flow_17lqm3u</bpmn2:outgoing><bpmn2:outgoing>Flow_0wrhcmc</bpmn2:outgoing></bpmn2:exclusiveGateway><bpmn2:sequenceFlow id=\"Flow_17lqm3u\" name=\"Yes\" sourceRef=\"Gateway_0xz4jn8\" targetRef=\"Activity_18j4lgr\"/><bpmn2:endEvent id=\"Event_08zfpfz\" name=\"End\"><bpmn2:incoming>Flow_09lw1bd</bpmn2:incoming><bpmn2:incoming>Flow_087phtw</bpmn2:incoming><bpmn2:terminateEventDefinition id=\"TerminateEventDefinition_0rbn1z4\"/></bpmn2:endEvent><bpmn2:exclusiveGateway id=\"Gateway_1kq39wd\" name=\"Is Principal Assignment?\"><bpmn2:incoming>Flow_1p41dk5</bpmn2:incoming><bpmn2:outgoing>Flow_1scwzdl</bpmn2:outgoing><bpmn2:outgoing>Flow_14synbf</bpmn2:outgoing></bpmn2:exclusiveGateway><bpmn2:sequenceFlow id=\"Flow_0wrhcmc\" name=\"No\" sourceRef=\"Gateway_0xz4jn8\" targetRef=\"Activity_09toagd\"/><bpmn2:sequenceFlow id=\"Flow_1scwzdl\" name=\"Yes\" sourceRef=\"Gateway_1kq39wd\" targetRef=\"Gateway_0xz4jn8\"/><bpmn2:serviceTask id=\"Activity_0gt7ulg\" name=\"Get Employee ID in this Entity\"><bpmn2:incoming>Flow_1veh24z</bpmn2:incoming><bpmn2:outgoing>Flow_0or0kd2</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:serviceTask id=\"Activity_1h5hbxf\" name=\"Get Employee's firstname in this Assignment\"><bpmn2:incoming>Flow_1bbx1d8</bpmn2:incoming><bpmn2:outgoing>Flow_06taaom</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:sequenceFlow id=\"Flow_06taaom\" sourceRef=\"Activity_1h5hbxf\" targetRef=\"Activity_1juazdb\"/><bpmn2:serviceTask id=\"Activity_1juazdb\" name=\"Get Employee's lastname in this Assignment\"><bpmn2:incoming>Flow_06taaom</bpmn2:incoming><bpmn2:outgoing>Flow_189kfj0</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:serviceTask id=\"Activity_04tx0ug\" name=\"Get Employee's email in this Entity\"><bpmn2:incoming>Flow_0or0kd2</bpmn2:incoming><bpmn2:outgoing>Flow_1fgeisk</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:serviceTask id=\"Activity_0slhf42\" name=\"Get Entity ID in this Assignment\"><bpmn2:incoming>Flow_1fgeisk</bpmn2:incoming><bpmn2:outgoing>Flow_08m6m94</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:sequenceFlow id=\"Flow_08m6m94\" sourceRef=\"Activity_0slhf42\" targetRef=\"Activity_0rqjrn9\"/><bpmn2:serviceTask id=\"Activity_0rqjrn9\" name=\"Get HR Users in this Entity\"><bpmn2:incoming>Flow_08m6m94</bpmn2:incoming><bpmn2:outgoing>Flow_1bbx1d8</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:sequenceFlow id=\"Flow_0or0kd2\" sourceRef=\"Activity_0gt7ulg\" targetRef=\"Activity_04tx0ug\"/><bpmn2:sequenceFlow id=\"Flow_189kfj0\" sourceRef=\"Activity_1juazdb\" targetRef=\"Activity_0gb5yac\"/><bpmn2:sequenceFlow id=\"Flow_1fgeisk\" sourceRef=\"Activity_04tx0ug\" targetRef=\"Activity_0slhf42\"/><bpmn2:userTask id=\"Activity_18j4lgr\" name=\"Notify of an End Principal Assignment\"><bpmn2:incoming>Flow_17lqm3u</bpmn2:incoming><bpmn2:outgoing>Flow_09lw1bd</bpmn2:outgoing></bpmn2:userTask><bpmn2:sequenceFlow id=\"Flow_09lw1bd\" sourceRef=\"Activity_18j4lgr\" targetRef=\"Event_08zfpfz\"/><bpmn2:sequenceFlow id=\"Flow_1bbx1d8\" sourceRef=\"Activity_0rqjrn9\" targetRef=\"Activity_1h5hbxf\"/><bpmn2:serviceTask id=\"Activity_0gb5yac\" name=\"Get Entity Name in this Assignment\"><bpmn2:incoming>Flow_189kfj0</bpmn2:incoming><bpmn2:outgoing>Flow_1p41dk5</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:sequenceFlow id=\"Flow_1p41dk5\" sourceRef=\"Activity_0gb5yac\" targetRef=\"Gateway_1kq39wd\"/><bpmn2:sequenceFlow id=\"Flow_029y8v2\" sourceRef=\"StartEvent_1\" targetRef=\"Activity_0s3bynt\"/><bpmn2:serviceTask id=\"Activity_0s3bynt\" name=\"Update the previous latest history\"><bpmn2:incoming>Flow_029y8v2</bpmn2:incoming><bpmn2:outgoing>Flow_1emoe0l</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:sequenceFlow id=\"Flow_1emoe0l\" sourceRef=\"Activity_0s3bynt\" targetRef=\"Activity_0rnio9x\"/><bpmn2:serviceTask id=\"Activity_0rnio9x\" name=\"Insert a new latest history\"><bpmn2:incoming>Flow_1emoe0l</bpmn2:incoming><bpmn2:outgoing>Flow_0x9h7bd</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:sequenceFlow id=\"Flow_0x9h7bd\" sourceRef=\"Activity_0rnio9x\" targetRef=\"Activity_0i2syty\"/><bpmn2:serviceTask id=\"Activity_0i2syty\" name=\"Update last_modified_datetime in the history\"><bpmn2:incoming>Flow_0x9h7bd</bpmn2:incoming><bpmn2:outgoing>Flow_1qfeqqk</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:sequenceFlow id=\"Flow_1qfeqqk\" sourceRef=\"Activity_0i2syty\" targetRef=\"Activity_0atzlu6\"/><bpmn2:serviceTask id=\"Activity_0atzlu6\" name=\"Get last_modified_datetime in the history\"><bpmn2:incoming>Flow_1qfeqqk</bpmn2:incoming><bpmn2:outgoing>Flow_1veh24z</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:sequenceFlow id=\"Flow_1veh24z\" sourceRef=\"Activity_0atzlu6\" targetRef=\"Activity_0gt7ulg\"/><bpmn2:userTask id=\"Activity_09toagd\" name=\"Notify of an Edited Assignment\"><bpmn2:incoming>Flow_14synbf</bpmn2:incoming><bpmn2:incoming>Flow_0wrhcmc</bpmn2:incoming><bpmn2:outgoing>Flow_087phtw</bpmn2:outgoing></bpmn2:userTask><bpmn2:sequenceFlow id=\"Flow_087phtw\" sourceRef=\"Activity_09toagd\" targetRef=\"Event_08zfpfz\"/><bpmn2:sequenceFlow id=\"Flow_14synbf\" name=\"No\" sourceRef=\"Gateway_1kq39wd\" targetRef=\"Activity_09toagd\"/></bpmn2:process><bpmndi:BPMNDiagram id=\"BPMNDiagram_1\"><bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\"><bpmndi:BPMNEdge id=\"Flow_14synbf_di\" bpmnElement=\"Flow_14synbf\"><di:waypoint x=\"470\" y=\"165\"/><di:waypoint x=\"470\" y=\"80\"/><di:waypoint x=\"890\" y=\"80\"/><bpmndi:BPMNLabel><dc:Bounds x=\"478\" y=\"120\" width=\"15\" height=\"14\"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_087phtw_di\" bpmnElement=\"Flow_087phtw\"><di:waypoint x=\"990\" y=\"80\"/><di:waypoint x=\"1270\" y=\"80\"/><di:waypoint x=\"1270\" y=\"262\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_1veh24z_di\" bpmnElement=\"Flow_1veh24z\"><di:waypoint x=\"340\" y=\"30\"/><di:waypoint x=\"340\" y=\"120\"/><di:waypoint x=\"230\" y=\"120\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_1qfeqqk_di\" bpmnElement=\"Flow_1qfeqqk\"><di:waypoint x=\"230\" y=\"-10\"/><di:waypoint x=\"290\" y=\"-10\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_0x9h7bd_di\" bpmnElement=\"Flow_0x9h7bd\"><di:waypoint x=\"50\" y=\"-10\"/><di:waypoint x=\"130\" y=\"-10\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_1emoe0l_di\" bpmnElement=\"Flow_1emoe0l\"><di:waypoint x=\"-120\" y=\"-10\"/><di:waypoint x=\"-50\" y=\"-10\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_029y8v2_di\" bpmnElement=\"Flow_029y8v2\"><di:waypoint x=\"-332\" y=\"-10\"/><di:waypoint x=\"-220\" y=\"-10\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_1p41dk5_di\" bpmnElement=\"Flow_1p41dk5\"><di:waypoint x=\"340\" y=\"240\"/><di:waypoint x=\"340\" y=\"190\"/><di:waypoint x=\"445\" y=\"190\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_1bbx1d8_di\" bpmnElement=\"Flow_1bbx1d8\"><di:waypoint x=\"-120\" y=\"280\"/><di:waypoint x=\"-50\" y=\"280\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_09lw1bd_di\" bpmnElement=\"Flow_09lw1bd\"><di:waypoint x=\"820\" y=\"280\"/><di:waypoint x=\"1252\" y=\"280\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_1fgeisk_di\" bpmnElement=\"Flow_1fgeisk\"><di:waypoint x=\"-50\" y=\"130\"/><di:waypoint x=\"-120\" y=\"130\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_189kfj0_di\" bpmnElement=\"Flow_189kfj0\"><di:waypoint x=\"230\" y=\"280\"/><di:waypoint x=\"290\" y=\"280\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_0or0kd2_di\" bpmnElement=\"Flow_0or0kd2\"><di:waypoint x=\"130\" y=\"130\"/><di:waypoint x=\"50\" y=\"130\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_08m6m94_di\" bpmnElement=\"Flow_08m6m94\"><di:waypoint x=\"-170\" y=\"170\"/><di:waypoint x=\"-170\" y=\"240\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_06taaom_di\" bpmnElement=\"Flow_06taaom\"><di:waypoint x=\"50\" y=\"280\"/><di:waypoint x=\"130\" y=\"280\"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_1scwzdl_di\" bpmnElement=\"Flow_1scwzdl\"><di:waypoint x=\"470\" y=\"215\"/><di:waypoint x=\"470\" y=\"460\"/><di:waypoint x=\"340\" y=\"460\"/><di:waypoint x=\"340\" y=\"575\"/><bpmndi:BPMNLabel><dc:Bounds x=\"425\" y=\"474\" width=\"18\" height=\"14\"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_0wrhcmc_di\" bpmnElement=\"Flow_0wrhcmc\"><di:waypoint x=\"340\" y=\"625\"/><di:waypoint x=\"340\" y=\"660\"/><di:waypoint x=\"940\" y=\"660\"/><di:waypoint x=\"940\" y=\"120\"/><bpmndi:BPMNLabel><dc:Bounds x=\"408\" y=\"703\" width=\"15\" height=\"14\"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_17lqm3u_di\" bpmnElement=\"Flow_17lqm3u\"><di:waypoint x=\"365\" y=\"600\"/><di:waypoint x=\"620\" y=\"600\"/><di:waypoint x=\"620\" y=\"280\"/><di:waypoint x=\"720\" y=\"280\"/><bpmndi:BPMNLabel><dc:Bounds x=\"582\" y=\"434\" width=\"18\" height=\"14\"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge><bpmndi:BPMNShape id=\"Event_11r1j7g_di\" bpmnElement=\"StartEvent_1\"><dc:Bounds x=\"-368\" y=\"-28\" width=\"36\" height=\"36\"/><bpmndi:BPMNLabel><dc:Bounds x=\"-362\" y=\"18\" width=\"24\" height=\"14\"/></bpmndi:BPMNLabel></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Gateway_0xz4jn8_di\" bpmnElement=\"Gateway_0xz4jn8\" isMarkerVisible=\"true\"><dc:Bounds x=\"315\" y=\"575\" width=\"50\" height=\"50\"/><bpmndi:BPMNLabel><dc:Bounds x=\"248\" y=\"546\" width=\"64\" height=\"27\"/></bpmndi:BPMNLabel></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Event_0bkjsuy_di\" bpmnElement=\"Event_08zfpfz\"><dc:Bounds x=\"1252\" y=\"262\" width=\"36\" height=\"36\"/><bpmndi:BPMNLabel><dc:Bounds x=\"1310\" y=\"243\" width=\"20\" height=\"14\"/></bpmndi:BPMNLabel></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Gateway_1kq39wd_di\" bpmnElement=\"Gateway_1kq39wd\" isMarkerVisible=\"true\"><dc:Bounds x=\"445\" y=\"165\" width=\"50\" height=\"50\"/><bpmndi:BPMNLabel><dc:Bounds x=\"505\" y=\"176\" width=\"65\" height=\"27\"/></bpmndi:BPMNLabel></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_0wx2q6s_di\" bpmnElement=\"Activity_0gt7ulg\"><dc:Bounds x=\"130\" y=\"90\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_138asf3_di\" bpmnElement=\"Activity_1h5hbxf\"><dc:Bounds x=\"-50\" y=\"240\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_170ah34_di\" bpmnElement=\"Activity_1juazdb\"><dc:Bounds x=\"130\" y=\"240\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_1uhn1rv_di\" bpmnElement=\"Activity_04tx0ug\"><dc:Bounds x=\"-50\" y=\"90\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_06d33xg_di\" bpmnElement=\"Activity_0slhf42\"><dc:Bounds x=\"-220\" y=\"90\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_16qdlrd_di\" bpmnElement=\"Activity_0rqjrn9\"><dc:Bounds x=\"-220\" y=\"240\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_1os58m5_di\" bpmnElement=\"Activity_18j4lgr\"><dc:Bounds x=\"720\" y=\"240\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_17y1x5f_di\" bpmnElement=\"Activity_0gb5yac\"><dc:Bounds x=\"290\" y=\"240\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_12n1i15_di\" bpmnElement=\"Activity_0s3bynt\"><dc:Bounds x=\"-220\" y=\"-50\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_0s0rj9k_di\" bpmnElement=\"Activity_0rnio9x\"><dc:Bounds x=\"-50\" y=\"-50\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_1p069il_di\" bpmnElement=\"Activity_0i2syty\"><dc:Bounds x=\"130\" y=\"-50\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_1syepbh_di\" bpmnElement=\"Activity_0atzlu6\"><dc:Bounds x=\"290\" y=\"-50\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_1gz45sg_di\" bpmnElement=\"Activity_09toagd\"><dc:Bounds x=\"890\" y=\"40\" width=\"100\" height=\"80\"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape></bpmndi:BPMNPlane></bpmndi:BPMNDiagram></bpmn2:definitions>",
+    "elementIDs": [
+     "14f41c05-130d-46cd-95a8-ef7cd58d7595",
+     "bfc68f1a-6461-4686-a7c9-d14bd351e335",
+     "1809c51b-a479-4d93-bc32-c5f868626bcc",
+     "9095653d-5444-4c59-a5af-6cd9a5c6c66c",
+     "44dc17c6-8725-4198-8ac8-6eae7332a84b",
+     "6218dfd5-1dec-4e8a-a1f0-faaa11f6dab0",
+     "b45d9d03-3178-4a06-8a66-a2f03768dc3e",
+     "491956b4-c33c-49d7-b4fe-5ccd0911d62d",
+     "3169078c-4cc1-4df8-a1e8-8747957bfcd4",
+     "e74746fd-dea2-4221-b734-d2e899b9d014",
+     "d8c2b7c7-35fa-4067-997e-a79465cd143e",
+     "9ae6a0ec-ac2f-4882-bbb0-8af7317c79fb",
+     "70507fe5-d1a3-4715-a770-6782e53d7972",
+     "dade0d39-7b29-4c8a-ae46-425113148083",
+     "898f12b8-f823-48da-a05c-1090c942af39",
+     "c4aa9e3b-d181-4cba-a5c0-4c0c2acb5ddb",
+     "cfdd740f-7373-47f1-a73e-cc75ea89b1d5"
+    ],
+    "connections": {
+     "Flow_17lqm3u": {
+      "id": "Flow_17lqm3u",
+      "type": "bpmn:SequenceFlow",
+      "from": "Gateway_0xz4jn8",
+      "to": "Activity_18j4lgr"
+     },
+     "Flow_0wrhcmc": {
+      "id": "Flow_0wrhcmc",
+      "type": "bpmn:SequenceFlow",
+      "from": "Gateway_0xz4jn8",
+      "to": "Activity_09toagd"
+     },
+     "Flow_1scwzdl": {
+      "id": "Flow_1scwzdl",
+      "type": "bpmn:SequenceFlow",
+      "from": "Gateway_1kq39wd",
+      "to": "Gateway_0xz4jn8"
+     },
+     "Flow_06taaom": {
+      "id": "Flow_06taaom",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_1h5hbxf",
+      "to": "Activity_1juazdb"
+     },
+     "Flow_08m6m94": {
+      "id": "Flow_08m6m94",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_0slhf42",
+      "to": "Activity_0rqjrn9"
+     },
+     "Flow_0or0kd2": {
+      "id": "Flow_0or0kd2",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_0gt7ulg",
+      "to": "Activity_04tx0ug"
+     },
+     "Flow_189kfj0": {
+      "id": "Flow_189kfj0",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_1juazdb",
+      "to": "Activity_0gb5yac"
+     },
+     "Flow_1fgeisk": {
+      "id": "Flow_1fgeisk",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_04tx0ug",
+      "to": "Activity_0slhf42"
+     },
+     "Flow_09lw1bd": {
+      "id": "Flow_09lw1bd",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_18j4lgr",
+      "to": "Event_08zfpfz"
+     },
+     "Flow_1bbx1d8": {
+      "id": "Flow_1bbx1d8",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_0rqjrn9",
+      "to": "Activity_1h5hbxf"
+     },
+     "Flow_1p41dk5": {
+      "id": "Flow_1p41dk5",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_0gb5yac",
+      "to": "Gateway_1kq39wd"
+     },
+     "Flow_029y8v2": {
+      "id": "Flow_029y8v2",
+      "type": "bpmn:SequenceFlow",
+      "from": "StartEvent_1",
+      "to": "Activity_0s3bynt"
+     },
+     "Flow_1emoe0l": {
+      "id": "Flow_1emoe0l",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_0s3bynt",
+      "to": "Activity_0rnio9x"
+     },
+     "Flow_0x9h7bd": {
+      "id": "Flow_0x9h7bd",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_0rnio9x",
+      "to": "Activity_0i2syty"
+     },
+     "Flow_1qfeqqk": {
+      "id": "Flow_1qfeqqk",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_0i2syty",
+      "to": "Activity_0atzlu6"
+     },
+     "Flow_1veh24z": {
+      "id": "Flow_1veh24z",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_0atzlu6",
+      "to": "Activity_0gt7ulg"
+     },
+     "Flow_087phtw": {
+      "id": "Flow_087phtw",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_09toagd",
+      "to": "Event_08zfpfz"
+     },
+     "Flow_14synbf": {
+      "id": "Flow_14synbf",
+      "type": "bpmn:SequenceFlow",
+      "from": "Gateway_1kq39wd",
+      "to": "Activity_09toagd"
+     }
+    }
+   }
+  },
+  {
+   "id": "14f41c05-130d-46cd-95a8-ef7cd58d7595",
+   "type": "trigger",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Start"
+     }
+    ],
+    "id": "14f41c05-130d-46cd-95a8-ef7cd58d7595",
+    "name": "Start",
+    "type": "trigger",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "StartEvent_1",
+    "laneDiagramID": "?laneID?",
+    "key": "TriggerLifecycle",
+    "triggerKey": "6be3870c-ea6f-463a-b95e-80c5fe936bac.updated",
+    "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+    "lifecycleKey": "updated"
+   }
+  },
+  {
+   "id": "bfc68f1a-6461-4686-a7c9-d14bd351e335",
+   "type": "process.gateway.exclusive",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Do Date End have value?"
+     }
+    ],
+    "id": "bfc68f1a-6461-4686-a7c9-d14bd351e335",
+    "name": "Do Date End have value?",
+    "type": "process.gateway.exclusive",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Gateway_0xz4jn8",
+    "laneDiagramID": "?laneID?",
+    "key": "GatewayExclusive",
+    "conditions": {
+     "Flow_17lqm3u": {
+      "label": "Yes",
+      "filterValue": {
+       "glue": "and",
+       "rules": [
+        {
+         "key": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+         "rule": "less_or_equal_current",
+         "value": ""
+        }
+       ]
+      }
+     },
+     "Flow_0wrhcmc": {
+      "label": "No",
+      "filterValue": {
+       "glue": "or",
+       "rules": [
+        {
+         "key": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+         "rule": "is_empty",
+         "value": ""
+        },
+        {
+         "key": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+         "rule": "greater_current",
+         "value": ""
+        }
+       ]
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "1809c51b-a479-4d93-bc32-c5f868626bcc",
+   "type": "process.task.end",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "End"
+     }
+    ],
+    "id": "1809c51b-a479-4d93-bc32-c5f868626bcc",
+    "name": "End",
+    "type": "process.task.end",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Event_08zfpfz",
+    "laneDiagramID": "?laneID?",
+    "key": "End"
+   }
+  },
+  {
+   "id": "9095653d-5444-4c59-a5af-6cd9a5c6c66c",
+   "type": "process.gateway.exclusive",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Is Principal Assignment?"
+     }
+    ],
+    "id": "9095653d-5444-4c59-a5af-6cd9a5c6c66c",
+    "name": "Is Principal Assignment?",
+    "type": "process.gateway.exclusive",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Gateway_1kq39wd",
+    "laneDiagramID": "?laneID?",
+    "key": "GatewayExclusive",
+    "conditions": {
+     "Flow_1scwzdl": {
+      "label": "Yes",
+      "filterValue": {
+       "glue": "and",
+       "rules": [
+        {
+         "key": "079f04c9-7a93-494b-958c-246632f6de7f",
+         "rule": "checked",
+         "value": ""
+        }
+       ]
+      }
+     },
+     "Flow_14synbf": {
+      "label": "No",
+      "filterValue": {
+       "glue": "and",
+       "rules": [
+        {
+         "key": "079f04c9-7a93-494b-958c-246632f6de7f",
+         "rule": "unchecked",
+         "value": ""
+        }
+       ]
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "44dc17c6-8725-4198-8ac8-6eae7332a84b",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Get Employee ID in this Entity"
+     }
+    ],
+    "id": "44dc17c6-8725-4198-8ac8-6eae7332a84b",
+    "name": "Get Employee ID in this Entity",
+    "type": "process.task.service.query",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_0gt7ulg",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+     },
+     "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d",
+          "rule": "context_equals",
+          "value": "StartEvent_1.99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d"
+         }
+        ]
+       }
+      },
+      "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "a6b6489b-45c2-4b74-93d4-9f9609678efb"
+        },
+        "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+        "next": {
+         "key": "row_pluck",
+         "params": {
+          "fieldID": "aa1d63d1-7bdd-4bd4-a186-337a05d13a2f"
+         },
+         "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+         "next": {
+          "key": "row_save",
+          "params": {
+           "task_param": "EmployeeID"
+          },
+          "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+          "taskParam": "EmployeeID"
+         },
+         "fieldID": "aa1d63d1-7bdd-4bd4-a186-337a05d13a2f"
+        },
+        "fieldID": "a6b6489b-45c2-4b74-93d4-9f9609678efb",
+        "objectOutID": "527e22a3-a56b-4945-859f-a4006b1bd65f"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "6218dfd5-1dec-4e8a-a1f0-faaa11f6dab0",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Get Employee's firstname in this Assignment"
+     }
+    ],
+    "id": "6218dfd5-1dec-4e8a-a1f0-faaa11f6dab0",
+    "name": "Get Employee's firstname in this Assignment",
+    "type": "process.task.service.query",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_1h5hbxf",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "527e22a3-a56b-4945-859f-a4006b1bd65f"
+     },
+     "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "aa1d63d1-7bdd-4bd4-a186-337a05d13a2f",
+          "rule": "context_equals",
+          "value": "44dc17c6-8725-4198-8ac8-6eae7332a84b.EmployeeID"
+         }
+        ]
+       }
+      },
+      "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "2edfe6ee-d004-4cef-8ef1-68ad2ad9e7d4"
+        },
+        "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+        "next": {
+         "key": "row_save",
+         "params": {
+          "task_param": "EmployeeFirstName"
+         },
+         "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+         "taskParam": "EmployeeFirstName"
+        },
+        "fieldID": "2edfe6ee-d004-4cef-8ef1-68ad2ad9e7d4"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "b45d9d03-3178-4a06-8a66-a2f03768dc3e",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Get Employee's lastname in this Assignment"
+     }
+    ],
+    "id": "b45d9d03-3178-4a06-8a66-a2f03768dc3e",
+    "name": "Get Employee's lastname in this Assignment",
+    "type": "process.task.service.query",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_1juazdb",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "527e22a3-a56b-4945-859f-a4006b1bd65f"
+     },
+     "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "aa1d63d1-7bdd-4bd4-a186-337a05d13a2f",
+          "rule": "context_equals",
+          "value": "44dc17c6-8725-4198-8ac8-6eae7332a84b.EmployeeID"
+         }
+        ]
+       }
+      },
+      "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "e457978e-b63b-40f4-8225-1ff88c4e9b5c"
+        },
+        "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+        "next": {
+         "key": "row_save",
+         "params": {
+          "task_param": "EmployeeLastName"
+         },
+         "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+         "taskParam": "EmployeeLastName"
+        },
+        "fieldID": "e457978e-b63b-40f4-8225-1ff88c4e9b5c"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "491956b4-c33c-49d7-b4fe-5ccd0911d62d",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Get Employee's email in this Entity"
+     }
+    ],
+    "id": "491956b4-c33c-49d7-b4fe-5ccd0911d62d",
+    "name": "Get Employee's email in this Entity",
+    "type": "process.task.service.query",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_04tx0ug",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "527e22a3-a56b-4945-859f-a4006b1bd65f"
+     },
+     "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "aa1d63d1-7bdd-4bd4-a186-337a05d13a2f",
+          "rule": "context_equals",
+          "value": "44dc17c6-8725-4198-8ac8-6eae7332a84b.EmployeeID"
+         }
+        ]
+       }
+      },
+      "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "63dcb9b1-de59-41e3-ba58-9bd0c5eeee0b"
+        },
+        "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+        "next": {
+         "key": "row_save",
+         "params": {
+          "task_param": "EmployeeEmail"
+         },
+         "objectID": "527e22a3-a56b-4945-859f-a4006b1bd65f",
+         "taskParam": "EmployeeEmail"
+        },
+        "fieldID": "63dcb9b1-de59-41e3-ba58-9bd0c5eeee0b"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "3169078c-4cc1-4df8-a1e8-8747957bfcd4",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Get Entity ID in this Assignment"
+     }
+    ],
+    "id": "3169078c-4cc1-4df8-a1e8-8747957bfcd4",
+    "name": "Get Entity ID in this Assignment",
+    "type": "process.task.service.query",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_0slhf42",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+     },
+     "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d",
+          "rule": "context_equals",
+          "value": "StartEvent_1.99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d"
+         }
+        ]
+       }
+      },
+      "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "aa577b4b-4cbc-4228-801e-ea026c6c04f7"
+        },
+        "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+        "next": {
+         "key": "row_pluck",
+         "params": {
+          "fieldID": "3a865653-8813-45f9-a9e5-32f343a02233"
+         },
+         "objectID": "2342524e-af8c-42ca-921a-eebb4c910279",
+         "next": {
+          "key": "row_save",
+          "params": {
+           "task_param": "EntityID"
+          },
+          "objectID": "2342524e-af8c-42ca-921a-eebb4c910279",
+          "taskParam": "EntityID"
+         },
+         "fieldID": "3a865653-8813-45f9-a9e5-32f343a02233"
+        },
+        "fieldID": "aa577b4b-4cbc-4228-801e-ea026c6c04f7",
+        "objectOutID": "2342524e-af8c-42ca-921a-eebb4c910279"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "e74746fd-dea2-4221-b734-d2e899b9d014",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Get HR Users in this Entity"
+     }
+    ],
+    "id": "e74746fd-dea2-4221-b734-d2e899b9d014",
+    "name": "Get HR Users in this Entity",
+    "type": "process.task.service.query",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_0rqjrn9",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "ce921800-6957-46a4-a0de-86a0e81cd759"
+     },
+     "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "89b067cd-dcc1-4886-ba8b-65f920062c70",
+          "rule": "context_equals",
+          "value": "3169078c-4cc1-4df8-a1e8-8747957bfcd4.EntityID"
+         }
+        ]
+       }
+      },
+      "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "156abc5f-354f-4481-a802-76e6370617d8"
+        },
+        "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+        "next": {
+         "key": "set_save",
+         "params": {
+          "task_param": "HRUsers"
+         },
+         "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+         "taskParam": "HRUsers"
+        },
+        "fieldID": "156abc5f-354f-4481-a802-76e6370617d8"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "d8c2b7c7-35fa-4067-997e-a79465cd143e",
+   "type": "process.task.user.approval",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Notify of an End Principal Assignment"
+     }
+    ],
+    "id": "d8c2b7c7-35fa-4067-997e-a79465cd143e",
+    "name": "Notify of an End Principal Assignment",
+    "type": "process.task.user.approval",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_18j4lgr",
+    "laneDiagramID": "?laneID?",
+    "key": "Approval",
+    "who": "1",
+    "toUsers": {
+     "useRole": 0,
+     "role": null,
+     "useAccount": 0,
+     "account": null,
+     "useField": 1,
+     "userFields": [
+      "e74746fd-dea2-4221-b734-d2e899b9d014.HRUsers"
+     ],
+     "filterConditions": {
+      "glue": "and",
+      "rules": []
+     }
+    },
+    "formBuilder": {
+     "components": [
+      {
+       "legend": "End the principal assignment",
+       "tooltip": "",
+       "customClass": "",
+       "tabindex": "",
+       "hidden": false,
+       "disabled": false,
+       "modalEdit": false,
+       "tags": [],
+       "properties": {},
+       "conditional": {
+        "show": null,
+        "when": null,
+        "eq": "",
+        "json": ""
+       },
+       "customConditional": "",
+       "logic": [],
+       "attributes": {},
+       "overlay": {
+        "style": "",
+        "page": "",
+        "left": "",
+        "top": "",
+        "width": "",
+        "height": ""
+       },
+       "type": "fieldset",
+       "label": "Field Set",
+       "input": false,
+       "tableView": false,
+       "components": [
+        {
+         "label": "Submitted Timestamp",
+         "labelPosition": "top",
+         "displayInTimezone": "viewer",
+         "useLocaleSettings": false,
+         "allowInput": true,
+         "format": "MMMM d, yyyy h:mm a",
+         "placeholder": "",
+         "description": "",
+         "tooltip": "",
+         "customClass": "",
+         "tabindex": "",
+         "hidden": false,
+         "hideLabel": false,
+         "autofocus": false,
+         "disabled": true,
+         "tableView": false,
+         "modalEdit": false,
+         "shortcutButtons": [],
+         "enableDate": true,
+         "datePicker": {
+          "disable": "",
+          "disableFunction": "",
+          "disableWeekends": false,
+          "disableWeekdays": false,
+          "minDate": null,
+          "maxDate": null,
+          "showWeeks": true,
+          "startingDay": 0,
+          "initDate": "",
+          "minMode": "day",
+          "maxMode": "year",
+          "yearRows": 4,
+          "yearColumns": 5
+         },
+         "enableTime": true,
+         "timePicker": {
+          "showMeridian": true,
+          "hourStep": 1,
+          "minuteStep": 1,
+          "readonlyInput": false,
+          "mousewheel": true,
+          "arrowkeys": true
+         },
+         "multiple": false,
+         "defaultValue": "",
+         "defaultDate": "",
+         "customOptions": {},
+         "persistent": true,
+         "protected": false,
+         "dbIndex": false,
+         "encrypted": false,
+         "redrawOn": "",
+         "clearOnHide": true,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "allowCalculateOverride": false,
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "customMessage": "",
+          "custom": "",
+          "customPrivate": false,
+          "json": "",
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false
+         },
+         "enableMinDateInput": false,
+         "enableMaxDateInput": false,
+         "unique": false,
+         "errorLabel": "",
+         "errors": "",
+         "key": "c4aa9e3b-d181-4cba-a5c0-4c0c2acb5ddb.last_modified_datetime",
+         "tags": [],
+         "properties": {},
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": "",
+          "json": ""
+         },
+         "customConditional": "",
+         "logic": [],
+         "attributes": {},
+         "overlay": {
+          "style": "",
+          "page": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "type": "datetime",
+         "timezone": "",
+         "abFieldID": "5ee6ab0c-89e9-4849-961f-5f9113396707",
+         "_key": "c4aa9e3b-d181-4cba-a5c0-4c0c2acb5ddb.last_modified_datetime",
+         "input": true,
+         "widget": {
+          "type": "calendar",
+          "displayInTimezone": "viewer",
+          "locale": "en",
+          "useLocaleSettings": false,
+          "allowInput": true,
+          "mode": "single",
+          "enableTime": true,
+          "noCalendar": false,
+          "format": "MMMM d, yyyy h:mm a",
+          "hourIncrement": 1,
+          "minuteIncrement": 1,
+          "time_24hr": false,
+          "minDate": null,
+          "disabledDates": "",
+          "disableWeekends": false,
+          "disableWeekdays": false,
+          "disableFunction": "",
+          "maxDate": null
+         },
+         "prefix": "",
+         "suffix": "",
+         "refreshOn": "",
+         "dataGridLabel": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "allowMultipleMasks": false,
+         "addons": [],
+         "datepickerMode": "day",
+         "id": "enn6arg"
+        },
+        {
+         "label": "Entity Name",
+         "labelPosition": "top",
+         "placeholder": "",
+         "description": "",
+         "tooltip": "",
+         "prefix": "",
+         "suffix": "",
+         "widget": {
+          "type": "input"
+         },
+         "inputMask": "",
+         "displayMask": "",
+         "applyMaskOn": "change",
+         "allowMultipleMasks": false,
+         "customClass": "",
+         "tabindex": "",
+         "autocomplete": "",
+         "hidden": false,
+         "hideLabel": false,
+         "showWordCount": false,
+         "showCharCount": false,
+         "mask": false,
+         "autofocus": false,
+         "spellcheck": true,
+         "disabled": true,
+         "tableView": true,
+         "modalEdit": false,
+         "multiple": false,
+         "persistent": true,
+         "inputFormat": "plain",
+         "protected": false,
+         "dbIndex": false,
+         "case": "",
+         "truncateMultipleSpaces": false,
+         "encrypted": false,
+         "redrawOn": "",
+         "clearOnHide": true,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "allowCalculateOverride": false,
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "pattern": "",
+          "customMessage": "",
+          "custom": "",
+          "customPrivate": false,
+          "json": "",
+          "minLength": "",
+          "maxLength": "",
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false
+         },
+         "unique": false,
+         "errorLabel": "",
+         "errors": "",
+         "key": "9ae6a0ec-ac2f-4882-bbb0-8af7317c79fb.EntityName",
+         "tags": [],
+         "properties": {},
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": "",
+          "json": ""
+         },
+         "customConditional": "",
+         "logic": [],
+         "attributes": {},
+         "overlay": {
+          "style": "",
+          "page": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "type": "textfield",
+         "abFieldID": "4814cb4b-3fb1-4b32-9ced-af70b5d454e9",
+         "_key": "9ae6a0ec-ac2f-4882-bbb0-8af7317c79fb.EntityName",
+         "input": true,
+         "refreshOn": "",
+         "dataGridLabel": false,
+         "addons": [],
+         "inputType": "text",
+         "id": "evo358w",
+         "defaultValue": ""
+        },
+        {
+         "abFieldID": "2edfe6ee-d004-4cef-8ef1-68ad2ad9e7d4",
+         "label": "First Name",
+         "disabled": true,
+         "key": "6218dfd5-1dec-4e8a-a1f0-faaa11f6dab0.EmployeeFirstName",
+         "_key": "6218dfd5-1dec-4e8a-a1f0-faaa11f6dab0.EmployeeFirstName",
+         "type": "textfield",
+         "input": true,
+         "id": "epun02",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": true,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "input"
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false,
+          "minLength": "",
+          "maxLength": "",
+          "pattern": ""
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "mask": false,
+         "inputType": "text",
+         "inputFormat": "plain",
+         "inputMask": "",
+         "displayMask": "",
+         "spellcheck": true,
+         "truncateMultipleSpaces": false
+        },
+        {
+         "abFieldID": "e457978e-b63b-40f4-8225-1ff88c4e9b5c",
+         "label": "Last Name",
+         "disabled": true,
+         "key": "b45d9d03-3178-4a06-8a66-a2f03768dc3e.EmployeeLastName",
+         "_key": "b45d9d03-3178-4a06-8a66-a2f03768dc3e.EmployeeLastName",
+         "type": "textfield",
+         "input": true,
+         "id": "evisw8u",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": true,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "input"
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false,
+          "minLength": "",
+          "maxLength": "",
+          "pattern": ""
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "mask": false,
+         "inputType": "text",
+         "inputFormat": "plain",
+         "inputMask": "",
+         "displayMask": "",
+         "spellcheck": true,
+         "truncateMultipleSpaces": false
+        },
+        {
+         "abFieldID": "63dcb9b1-de59-41e3-ba58-9bd0c5eeee0b",
+         "label": "Email",
+         "disabled": true,
+         "key": "491956b4-c33c-49d7-b4fe-5ccd0911d62d.EmployeeEmail",
+         "_key": "491956b4-c33c-49d7-b4fe-5ccd0911d62d.EmployeeEmail",
+         "type": "textfield",
+         "input": true,
+         "id": "e7yheef",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": true,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "input"
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false,
+          "minLength": "",
+          "maxLength": "",
+          "pattern": ""
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "mask": false,
+         "inputType": "text",
+         "inputFormat": "plain",
+         "inputMask": "",
+         "displayMask": "",
+         "spellcheck": true,
+         "truncateMultipleSpaces": false
+        },
+        {
+         "abFieldID": "5546868c-bdb9-4e30-b8fc-cc2b3a886eb2",
+         "label": "Job Title",
+         "disabled": true,
+         "key": "StartEvent_1.5546868c-bdb9-4e30-b8fc-cc2b3a886eb2",
+         "_key": "StartEvent_1.5546868c-bdb9-4e30-b8fc-cc2b3a886eb2",
+         "type": "textfield",
+         "input": true,
+         "id": "ehd14tm",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": true,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "input"
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false,
+          "minLength": "",
+          "maxLength": "",
+          "pattern": ""
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "mask": false,
+         "inputType": "text",
+         "inputFormat": "plain",
+         "inputMask": "",
+         "displayMask": "",
+         "spellcheck": true,
+         "truncateMultipleSpaces": false
+        },
+        {
+         "abFieldID": "cdfdd0e3-6395-43f1-a6b3-47ff535ed1df",
+         "label": "Job Description",
+         "disabled": true,
+         "key": "StartEvent_1.cdfdd0e3-6395-43f1-a6b3-47ff535ed1df",
+         "_key": "StartEvent_1.cdfdd0e3-6395-43f1-a6b3-47ff535ed1df",
+         "type": "textfield",
+         "input": true,
+         "id": "eu659qn",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": true,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "input"
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false,
+          "minLength": "",
+          "maxLength": "",
+          "pattern": ""
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "mask": false,
+         "inputType": "text",
+         "inputFormat": "plain",
+         "inputMask": "",
+         "displayMask": "",
+         "spellcheck": true,
+         "truncateMultipleSpaces": false
+        },
+        {
+         "abFieldID": "f04c6040-179d-465f-bb90-bd850b060dfe",
+         "label": "Start Date",
+         "disabled": true,
+         "key": "StartEvent_1.f04c6040-179d-465f-bb90-bd850b060dfe",
+         "_key": "StartEvent_1.f04c6040-179d-465f-bb90-bd850b060dfe",
+         "type": "datetime",
+         "input": true,
+         "format": "MMMM d, yyyy",
+         "id": "ev70kci",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": "",
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": false,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "calendar",
+          "displayInTimezone": "viewer",
+          "locale": "en",
+          "useLocaleSettings": false,
+          "allowInput": true,
+          "mode": "single",
+          "enableTime": true,
+          "noCalendar": false,
+          "format": "MMMM d, yyyy hh:mm a",
+          "hourIncrement": 1,
+          "minuteIncrement": 1,
+          "time_24hr": false,
+          "minDate": null,
+          "maxDate": null
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "useLocaleSettings": false,
+         "allowInput": true,
+         "enableDate": true,
+         "enableTime": true,
+         "defaultDate": "",
+         "displayInTimezone": "viewer",
+         "timezone": "",
+         "datepickerMode": "day",
+         "datePicker": {
+          "showWeeks": true,
+          "startingDay": 0,
+          "initDate": "",
+          "minMode": "day",
+          "maxMode": "year",
+          "yearRows": 4,
+          "yearColumns": 5,
+          "minDate": null,
+          "maxDate": null
+         },
+         "timePicker": {
+          "hourStep": 1,
+          "minuteStep": 1,
+          "showMeridian": true,
+          "readonlyInput": false,
+          "mousewheel": true,
+          "arrowkeys": true
+         },
+         "customOptions": {}
+        },
+        {
+         "abFieldID": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+         "label": "End Date",
+         "disabled": true,
+         "key": "StartEvent_1.bc444eba-534d-4bb7-856e-2a1dabce78ef",
+         "_key": "StartEvent_1.bc444eba-534d-4bb7-856e-2a1dabce78ef",
+         "type": "datetime",
+         "input": true,
+         "format": "MMMM d, yyyy",
+         "id": "ekbkqn",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": "",
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": false,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "calendar",
+          "displayInTimezone": "viewer",
+          "locale": "en",
+          "useLocaleSettings": false,
+          "allowInput": true,
+          "mode": "single",
+          "enableTime": true,
+          "noCalendar": false,
+          "format": "MMMM d, yyyy hh:mm a",
+          "hourIncrement": 1,
+          "minuteIncrement": 1,
+          "time_24hr": false,
+          "minDate": null,
+          "maxDate": null
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "useLocaleSettings": false,
+         "allowInput": true,
+         "enableDate": true,
+         "enableTime": true,
+         "defaultDate": "",
+         "displayInTimezone": "viewer",
+         "timezone": "",
+         "datepickerMode": "day",
+         "datePicker": {
+          "showWeeks": true,
+          "startingDay": 0,
+          "initDate": "",
+          "minMode": "day",
+          "maxMode": "year",
+          "yearRows": 4,
+          "yearColumns": 5,
+          "minDate": null,
+          "maxDate": null
+         },
+         "timePicker": {
+          "hourStep": 1,
+          "minuteStep": 1,
+          "showMeridian": true,
+          "readonlyInput": false,
+          "mousewheel": true,
+          "arrowkeys": true
+         },
+         "customOptions": {}
+        },
+        {
+         "abFieldID": "079f04c9-7a93-494b-958c-246632f6de7f",
+         "label": "Is Principal",
+         "disabled": true,
+         "key": "StartEvent_1.079f04c9-7a93-494b-958c-246632f6de7f",
+         "_key": "StartEvent_1.079f04c9-7a93-494b-958c-246632f6de7f",
+         "type": "checkbox",
+         "input": true,
+         "id": "el0j55r",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": false,
+         "modalEdit": false,
+         "dataGridLabel": true,
+         "labelPosition": "right",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": null,
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "inputType": "checkbox",
+         "value": "",
+         "name": ""
+        }
+       ],
+       "placeholder": "",
+       "prefix": "",
+       "suffix": "",
+       "multiple": false,
+       "defaultValue": null,
+       "protected": false,
+       "unique": false,
+       "persistent": false,
+       "clearOnHide": true,
+       "refreshOn": "",
+       "redrawOn": "",
+       "dataGridLabel": false,
+       "labelPosition": "top",
+       "description": "",
+       "errorLabel": "",
+       "hideLabel": false,
+       "autofocus": false,
+       "dbIndex": false,
+       "customDefaultValue": "",
+       "calculateValue": "",
+       "calculateServer": false,
+       "widget": null,
+       "validateOn": "change",
+       "validate": {
+        "required": false,
+        "custom": "",
+        "customPrivate": false,
+        "strictDateValidation": false,
+        "multiple": false,
+        "unique": false
+       },
+       "allowCalculateOverride": false,
+       "encrypted": false,
+       "showCharCount": false,
+       "showWordCount": false,
+       "allowMultipleMasks": false,
+       "addons": [],
+       "tree": false,
+       "lazyLoad": false,
+       "id": "emgye6m"
+      },
+      {
+       "label": "Close",
+       "action": "event",
+       "showValidations": false,
+       "theme": "secondary",
+       "size": "lg",
+       "block": true,
+       "leftIcon": "fa fa-close",
+       "rightIcon": "",
+       "shortcut": "",
+       "description": "",
+       "tooltip": "",
+       "customClass": "",
+       "tabindex": "",
+       "disableOnInvalid": false,
+       "hidden": false,
+       "autofocus": false,
+       "disabled": false,
+       "tableView": false,
+       "modalEdit": false,
+       "key": "approve",
+       "tags": [],
+       "properties": {},
+       "conditional": {
+        "show": null,
+        "when": null,
+        "eq": "",
+        "json": ""
+       },
+       "customConditional": "",
+       "logic": [],
+       "attributes": {},
+       "overlay": {
+        "style": "",
+        "page": "",
+        "left": "",
+        "top": "",
+        "width": "",
+        "height": ""
+       },
+       "type": "button",
+       "event": "approve",
+       "input": false,
+       "placeholder": "",
+       "prefix": "",
+       "suffix": "",
+       "multiple": false,
+       "defaultValue": null,
+       "protected": false,
+       "unique": false,
+       "persistent": false,
+       "clearOnHide": true,
+       "refreshOn": "",
+       "redrawOn": "",
+       "dataGridLabel": true,
+       "labelPosition": "top",
+       "errorLabel": "",
+       "hideLabel": false,
+       "dbIndex": false,
+       "customDefaultValue": "",
+       "calculateValue": "",
+       "calculateServer": false,
+       "widget": {
+        "type": "input"
+       },
+       "validateOn": "change",
+       "validate": {
+        "required": false,
+        "custom": "",
+        "customPrivate": false,
+        "strictDateValidation": false,
+        "multiple": false,
+        "unique": false
+       },
+       "allowCalculateOverride": false,
+       "encrypted": false,
+       "showCharCount": false,
+       "showWordCount": false,
+       "allowMultipleMasks": false,
+       "addons": [],
+       "id": "eug7w8d"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "9ae6a0ec-ac2f-4882-bbb0-8af7317c79fb",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Get Entity Name in this Assignment"
+     }
+    ],
+    "id": "9ae6a0ec-ac2f-4882-bbb0-8af7317c79fb",
+    "name": "Get Entity Name in this Assignment",
+    "type": "process.task.service.query",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_0gb5yac",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "2342524e-af8c-42ca-921a-eebb4c910279"
+     },
+     "objectID": "2342524e-af8c-42ca-921a-eebb4c910279",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "3a865653-8813-45f9-a9e5-32f343a02233",
+          "rule": "context_equals",
+          "value": "3169078c-4cc1-4df8-a1e8-8747957bfcd4.EntityID"
+         }
+        ]
+       }
+      },
+      "objectID": "2342524e-af8c-42ca-921a-eebb4c910279",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "2342524e-af8c-42ca-921a-eebb4c910279",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "4814cb4b-3fb1-4b32-9ced-af70b5d454e9"
+        },
+        "objectID": "2342524e-af8c-42ca-921a-eebb4c910279",
+        "next": {
+         "key": "row_save",
+         "params": {
+          "task_param": "EntityName"
+         },
+         "objectID": "2342524e-af8c-42ca-921a-eebb4c910279",
+         "taskParam": "EntityName"
+        },
+        "fieldID": "4814cb4b-3fb1-4b32-9ced-af70b5d454e9"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "70507fe5-d1a3-4715-a770-6782e53d7972",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Update the previous latest history"
+     }
+    ],
+    "id": "70507fe5-d1a3-4715-a770-6782e53d7972",
+    "name": "Update the previous latest history",
+    "type": "process.task.service.query",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_0s3bynt",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "d46121fb-f71c-4d31-b3fe-196cb83654d3"
+     },
+     "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "5b323397-e457-44d7-8811-7d01d910aba7",
+          "rule": "equals",
+          "value": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+         },
+         {
+          "key": "9e2d0f09-43fc-482d-95fd-ca99ac381be9",
+          "rule": "context_equals",
+          "value": "StartEvent_1.99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d"
+         },
+         {
+          "key": "a5aecf12-548e-405e-8a60-82ef4fd6b053",
+          "rule": "checked",
+          "value": ""
+         }
+        ]
+       }
+      },
+      "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+       "next": {
+        "key": "update",
+        "params": {
+         "values": [
+          {
+           "fieldId": "a5aecf12-548e-405e-8a60-82ef4fd6b053",
+           "value": 0
+          }
+         ]
+        },
+        "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "dade0d39-7b29-4c8a-ae46-425113148083",
+   "type": "process.task.service.insertRecord",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Insert a new latest history"
+     }
+    ],
+    "id": "dade0d39-7b29-4c8a-ae46-425113148083",
+    "name": "Insert a new latest history",
+    "type": "process.task.service.insertRecord",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_0rnio9x",
+    "laneDiagramID": "?laneID?",
+    "key": "InsertRecord",
+    "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+    "fieldValues": {
+     "5b323397-e457-44d7-8811-7d01d910aba7": {
+      "set": "1",
+      "value": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+     },
+     "9e2d0f09-43fc-482d-95fd-ca99ac381be9": {
+      "set": "2",
+      "value": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d"
+     },
+     "5ee6ab0c-89e9-4849-961f-5f9113396707": {
+      "set": "0",
+      "value": null
+     },
+     "a5aecf12-548e-405e-8a60-82ef4fd6b053": {
+      "set": "1",
+      "value": "1"
+     }
+    },
+    "isRepeat": false,
+    "repeatMode": "",
+    "repeatColumn": ""
+   }
+  },
+  {
+   "id": "898f12b8-f823-48da-a05c-1090c942af39",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Update last_modified_datetime in the history"
+     }
+    ],
+    "id": "898f12b8-f823-48da-a05c-1090c942af39",
+    "name": "Update last_modified_datetime in the history",
+    "type": "process.task.service.query",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_0i2syty",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "d46121fb-f71c-4d31-b3fe-196cb83654d3"
+     },
+     "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "5b323397-e457-44d7-8811-7d01d910aba7",
+          "rule": "equals",
+          "value": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+         },
+         {
+          "key": "9e2d0f09-43fc-482d-95fd-ca99ac381be9",
+          "rule": "context_equals",
+          "value": "StartEvent_1.99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d"
+         },
+         {
+          "key": "a5aecf12-548e-405e-8a60-82ef4fd6b053",
+          "rule": "checked",
+          "value": ""
+         }
+        ]
+       }
+      },
+      "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+       "next": {
+        "key": "update",
+        "params": {
+         "values": [
+          {
+           "fieldId": "5ee6ab0c-89e9-4849-961f-5f9113396707",
+           "value": "ab-current-date"
+          }
+         ]
+        },
+        "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "c4aa9e3b-d181-4cba-a5c0-4c0c2acb5ddb",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Get last_modified_datetime in the history"
+     }
+    ],
+    "id": "c4aa9e3b-d181-4cba-a5c0-4c0c2acb5ddb",
+    "name": "Get last_modified_datetime in the history",
+    "type": "process.task.service.query",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_0atzlu6",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "d46121fb-f71c-4d31-b3fe-196cb83654d3"
+     },
+     "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "5b323397-e457-44d7-8811-7d01d910aba7",
+          "rule": "equals",
+          "value": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+         },
+         {
+          "key": "9e2d0f09-43fc-482d-95fd-ca99ac381be9",
+          "rule": "context_equals",
+          "value": "StartEvent_1.99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d"
+         },
+         {
+          "key": "a5aecf12-548e-405e-8a60-82ef4fd6b053",
+          "rule": "checked",
+          "value": ""
+         }
+        ]
+       }
+      },
+      "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "5ee6ab0c-89e9-4849-961f-5f9113396707"
+        },
+        "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+        "next": {
+         "key": "row_save",
+         "params": {
+          "task_param": "last_modified_datetime"
+         },
+         "objectID": "d46121fb-f71c-4d31-b3fe-196cb83654d3",
+         "taskParam": "last_modified_datetime"
+        },
+        "fieldID": "5ee6ab0c-89e9-4849-961f-5f9113396707"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "cfdd740f-7373-47f1-a73e-cc75ea89b1d5",
+   "type": "process.task.user.approval",
+   "updatedAt": "2026-10-03 15:04:20",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Notify of an Edited Assignment"
+     }
+    ],
+    "id": "cfdd740f-7373-47f1-a73e-cc75ea89b1d5",
+    "name": "Notify of an Edited Assignment",
+    "type": "process.task.user.approval",
+    "processID": "4bf272d1-0367-4483-9e0d-21b82b4bc366",
+    "diagramID": "Activity_09toagd",
+    "laneDiagramID": "?laneID?",
+    "key": "Approval",
+    "who": "1",
+    "toUsers": {
+     "useRole": 0,
+     "role": null,
+     "useAccount": 0,
+     "account": null,
+     "useField": 1,
+     "userFields": [
+      "e74746fd-dea2-4221-b734-d2e899b9d014.HRUsers"
+     ],
+     "filterConditions": {
+      "glue": "and",
+      "rules": []
+     }
+    },
+    "formBuilder": {
+     "components": [
+      {
+       "legend": "Edit the assignment",
+       "tooltip": "",
+       "customClass": "",
+       "tabindex": "",
+       "hidden": false,
+       "disabled": false,
+       "modalEdit": false,
+       "tags": [],
+       "properties": {},
+       "conditional": {
+        "show": null,
+        "when": null,
+        "eq": "",
+        "json": ""
+       },
+       "customConditional": "",
+       "logic": [],
+       "attributes": {},
+       "overlay": {
+        "style": "",
+        "page": "",
+        "left": "",
+        "top": "",
+        "width": "",
+        "height": ""
+       },
+       "type": "fieldset",
+       "label": "Field Set",
+       "input": false,
+       "tableView": false,
+       "components": [
+        {
+         "label": "Submitted Timestamp",
+         "labelPosition": "top",
+         "displayInTimezone": "viewer",
+         "useLocaleSettings": false,
+         "allowInput": true,
+         "format": "MMMM d, yyyy h:mm a",
+         "placeholder": "",
+         "description": "",
+         "tooltip": "",
+         "customClass": "",
+         "tabindex": "",
+         "hidden": false,
+         "hideLabel": false,
+         "autofocus": false,
+         "disabled": true,
+         "tableView": false,
+         "modalEdit": false,
+         "shortcutButtons": [],
+         "enableDate": true,
+         "datePicker": {
+          "disable": "",
+          "disableFunction": "",
+          "disableWeekends": false,
+          "disableWeekdays": false,
+          "minDate": null,
+          "maxDate": null,
+          "showWeeks": true,
+          "startingDay": 0,
+          "initDate": "",
+          "minMode": "day",
+          "maxMode": "year",
+          "yearRows": 4,
+          "yearColumns": 5
+         },
+         "enableTime": true,
+         "timePicker": {
+          "showMeridian": true,
+          "hourStep": 1,
+          "minuteStep": 1,
+          "readonlyInput": false,
+          "mousewheel": true,
+          "arrowkeys": true
+         },
+         "multiple": false,
+         "defaultValue": "",
+         "defaultDate": "",
+         "customOptions": {},
+         "persistent": true,
+         "protected": false,
+         "dbIndex": false,
+         "encrypted": false,
+         "redrawOn": "",
+         "clearOnHide": true,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "allowCalculateOverride": false,
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "customMessage": "",
+          "custom": "",
+          "customPrivate": false,
+          "json": "",
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false
+         },
+         "enableMinDateInput": false,
+         "enableMaxDateInput": false,
+         "unique": false,
+         "errorLabel": "",
+         "errors": "",
+         "key": "c4aa9e3b-d181-4cba-a5c0-4c0c2acb5ddb.last_modified_datetime",
+         "tags": [],
+         "properties": {},
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": "",
+          "json": ""
+         },
+         "customConditional": "",
+         "logic": [],
+         "attributes": {},
+         "overlay": {
+          "style": "",
+          "page": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "type": "datetime",
+         "timezone": "",
+         "abFieldID": "5ee6ab0c-89e9-4849-961f-5f9113396707",
+         "_key": "c4aa9e3b-d181-4cba-a5c0-4c0c2acb5ddb.last_modified_datetime",
+         "input": true,
+         "widget": {
+          "type": "calendar",
+          "displayInTimezone": "viewer",
+          "locale": "en",
+          "useLocaleSettings": false,
+          "allowInput": true,
+          "mode": "single",
+          "enableTime": true,
+          "noCalendar": false,
+          "format": "MMMM d, yyyy h:mm a",
+          "hourIncrement": 1,
+          "minuteIncrement": 1,
+          "time_24hr": false,
+          "minDate": null,
+          "disabledDates": "",
+          "disableWeekends": false,
+          "disableWeekdays": false,
+          "disableFunction": "",
+          "maxDate": null
+         },
+         "prefix": "",
+         "suffix": "",
+         "refreshOn": "",
+         "dataGridLabel": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "allowMultipleMasks": false,
+         "addons": [],
+         "datepickerMode": "day",
+         "id": "ewcduv"
+        },
+        {
+         "label": "Entity Name",
+         "labelPosition": "top",
+         "placeholder": "",
+         "description": "",
+         "tooltip": "",
+         "prefix": "",
+         "suffix": "",
+         "widget": {
+          "type": "input"
+         },
+         "inputMask": "",
+         "displayMask": "",
+         "applyMaskOn": "change",
+         "allowMultipleMasks": false,
+         "customClass": "",
+         "tabindex": "",
+         "autocomplete": "",
+         "hidden": false,
+         "hideLabel": false,
+         "showWordCount": false,
+         "showCharCount": false,
+         "mask": false,
+         "autofocus": false,
+         "spellcheck": true,
+         "disabled": true,
+         "tableView": true,
+         "modalEdit": false,
+         "multiple": false,
+         "persistent": true,
+         "inputFormat": "plain",
+         "protected": false,
+         "dbIndex": false,
+         "case": "",
+         "truncateMultipleSpaces": false,
+         "encrypted": false,
+         "redrawOn": "",
+         "clearOnHide": true,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "allowCalculateOverride": false,
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "pattern": "",
+          "customMessage": "",
+          "custom": "",
+          "customPrivate": false,
+          "json": "",
+          "minLength": "",
+          "maxLength": "",
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false
+         },
+         "unique": false,
+         "errorLabel": "",
+         "errors": "",
+         "key": "9ae6a0ec-ac2f-4882-bbb0-8af7317c79fb.EntityName",
+         "tags": [],
+         "properties": {},
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": "",
+          "json": ""
+         },
+         "customConditional": "",
+         "logic": [],
+         "attributes": {},
+         "overlay": {
+          "style": "",
+          "page": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "type": "textfield",
+         "abFieldID": "4814cb4b-3fb1-4b32-9ced-af70b5d454e9",
+         "_key": "9ae6a0ec-ac2f-4882-bbb0-8af7317c79fb.EntityName",
+         "input": true,
+         "refreshOn": "",
+         "dataGridLabel": false,
+         "addons": [],
+         "inputType": "text",
+         "id": "e352p0e",
+         "defaultValue": ""
+        },
+        {
+         "abFieldID": "2edfe6ee-d004-4cef-8ef1-68ad2ad9e7d4",
+         "label": "First Name",
+         "disabled": true,
+         "key": "6218dfd5-1dec-4e8a-a1f0-faaa11f6dab0.EmployeeFirstName",
+         "_key": "6218dfd5-1dec-4e8a-a1f0-faaa11f6dab0.EmployeeFirstName",
+         "type": "textfield",
+         "input": true,
+         "id": "e88hso",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": true,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "input"
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false,
+          "minLength": "",
+          "maxLength": "",
+          "pattern": ""
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "mask": false,
+         "inputType": "text",
+         "inputFormat": "plain",
+         "inputMask": "",
+         "displayMask": "",
+         "spellcheck": true,
+         "truncateMultipleSpaces": false
+        },
+        {
+         "abFieldID": "e457978e-b63b-40f4-8225-1ff88c4e9b5c",
+         "label": "Last Name",
+         "disabled": true,
+         "key": "b45d9d03-3178-4a06-8a66-a2f03768dc3e.EmployeeLastName",
+         "_key": "b45d9d03-3178-4a06-8a66-a2f03768dc3e.EmployeeLastName",
+         "type": "textfield",
+         "input": true,
+         "id": "ej90afi",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": true,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "input"
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false,
+          "minLength": "",
+          "maxLength": "",
+          "pattern": ""
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "mask": false,
+         "inputType": "text",
+         "inputFormat": "plain",
+         "inputMask": "",
+         "displayMask": "",
+         "spellcheck": true,
+         "truncateMultipleSpaces": false
+        },
+        {
+         "abFieldID": "63dcb9b1-de59-41e3-ba58-9bd0c5eeee0b",
+         "label": "Email",
+         "disabled": true,
+         "key": "491956b4-c33c-49d7-b4fe-5ccd0911d62d.EmployeeEmail",
+         "_key": "491956b4-c33c-49d7-b4fe-5ccd0911d62d.EmployeeEmail",
+         "type": "textfield",
+         "input": true,
+         "id": "erpmmea",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": true,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "input"
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false,
+          "minLength": "",
+          "maxLength": "",
+          "pattern": ""
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "mask": false,
+         "inputType": "text",
+         "inputFormat": "plain",
+         "inputMask": "",
+         "displayMask": "",
+         "spellcheck": true,
+         "truncateMultipleSpaces": false
+        },
+        {
+         "abFieldID": "5546868c-bdb9-4e30-b8fc-cc2b3a886eb2",
+         "label": "Job Title",
+         "disabled": true,
+         "key": "StartEvent_1.5546868c-bdb9-4e30-b8fc-cc2b3a886eb2",
+         "_key": "StartEvent_1.5546868c-bdb9-4e30-b8fc-cc2b3a886eb2",
+         "type": "textfield",
+         "input": true,
+         "id": "e07af3",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": true,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "input"
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false,
+          "minLength": "",
+          "maxLength": "",
+          "pattern": ""
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "mask": false,
+         "inputType": "text",
+         "inputFormat": "plain",
+         "inputMask": "",
+         "displayMask": "",
+         "spellcheck": true,
+         "truncateMultipleSpaces": false
+        },
+        {
+         "abFieldID": "cdfdd0e3-6395-43f1-a6b3-47ff535ed1df",
+         "label": "Job Description",
+         "disabled": true,
+         "key": "StartEvent_1.cdfdd0e3-6395-43f1-a6b3-47ff535ed1df",
+         "_key": "StartEvent_1.cdfdd0e3-6395-43f1-a6b3-47ff535ed1df",
+         "type": "textfield",
+         "input": true,
+         "id": "ef6wjy",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": true,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "input"
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false,
+          "minLength": "",
+          "maxLength": "",
+          "pattern": ""
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "mask": false,
+         "inputType": "text",
+         "inputFormat": "plain",
+         "inputMask": "",
+         "displayMask": "",
+         "spellcheck": true,
+         "truncateMultipleSpaces": false
+        },
+        {
+         "abFieldID": "f04c6040-179d-465f-bb90-bd850b060dfe",
+         "label": "Start Date",
+         "disabled": true,
+         "key": "StartEvent_1.f04c6040-179d-465f-bb90-bd850b060dfe",
+         "_key": "StartEvent_1.f04c6040-179d-465f-bb90-bd850b060dfe",
+         "type": "datetime",
+         "input": true,
+         "format": "MMMM d, yyyy",
+         "id": "evpdow",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": "",
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": false,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "calendar",
+          "displayInTimezone": "viewer",
+          "locale": "en",
+          "useLocaleSettings": false,
+          "allowInput": true,
+          "mode": "single",
+          "enableTime": true,
+          "noCalendar": false,
+          "format": "MMMM d, yyyy hh:mm a",
+          "hourIncrement": 1,
+          "minuteIncrement": 1,
+          "time_24hr": false,
+          "minDate": null,
+          "maxDate": null
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "useLocaleSettings": false,
+         "allowInput": true,
+         "enableDate": true,
+         "enableTime": true,
+         "defaultDate": "",
+         "displayInTimezone": "viewer",
+         "timezone": "",
+         "datepickerMode": "day",
+         "datePicker": {
+          "showWeeks": true,
+          "startingDay": 0,
+          "initDate": "",
+          "minMode": "day",
+          "maxMode": "year",
+          "yearRows": 4,
+          "yearColumns": 5,
+          "minDate": null,
+          "maxDate": null
+         },
+         "timePicker": {
+          "hourStep": 1,
+          "minuteStep": 1,
+          "showMeridian": true,
+          "readonlyInput": false,
+          "mousewheel": true,
+          "arrowkeys": true
+         },
+         "customOptions": {}
+        },
+        {
+         "abFieldID": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+         "label": "End Date",
+         "disabled": true,
+         "key": "StartEvent_1.bc444eba-534d-4bb7-856e-2a1dabce78ef",
+         "_key": "StartEvent_1.bc444eba-534d-4bb7-856e-2a1dabce78ef",
+         "type": "datetime",
+         "input": true,
+         "format": "MMMM d, yyyy",
+         "id": "er05qlg",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": "",
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": false,
+         "modalEdit": false,
+         "dataGridLabel": false,
+         "labelPosition": "top",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": {
+          "type": "calendar",
+          "displayInTimezone": "viewer",
+          "locale": "en",
+          "useLocaleSettings": false,
+          "allowInput": true,
+          "mode": "single",
+          "enableTime": true,
+          "noCalendar": false,
+          "format": "MMMM d, yyyy hh:mm a",
+          "hourIncrement": 1,
+          "minuteIncrement": 1,
+          "time_24hr": false,
+          "minDate": null,
+          "maxDate": null
+         },
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "useLocaleSettings": false,
+         "allowInput": true,
+         "enableDate": true,
+         "enableTime": true,
+         "defaultDate": "",
+         "displayInTimezone": "viewer",
+         "timezone": "",
+         "datepickerMode": "day",
+         "datePicker": {
+          "showWeeks": true,
+          "startingDay": 0,
+          "initDate": "",
+          "minMode": "day",
+          "maxMode": "year",
+          "yearRows": 4,
+          "yearColumns": 5,
+          "minDate": null,
+          "maxDate": null
+         },
+         "timePicker": {
+          "hourStep": 1,
+          "minuteStep": 1,
+          "showMeridian": true,
+          "readonlyInput": false,
+          "mousewheel": true,
+          "arrowkeys": true
+         },
+         "customOptions": {}
+        },
+        {
+         "abFieldID": "079f04c9-7a93-494b-958c-246632f6de7f",
+         "label": "Is Principal",
+         "disabled": true,
+         "key": "StartEvent_1.079f04c9-7a93-494b-958c-246632f6de7f",
+         "_key": "StartEvent_1.079f04c9-7a93-494b-958c-246632f6de7f",
+         "type": "checkbox",
+         "input": true,
+         "id": "e269uqj",
+         "placeholder": "",
+         "prefix": "",
+         "customClass": "",
+         "suffix": "",
+         "multiple": false,
+         "defaultValue": null,
+         "protected": false,
+         "unique": false,
+         "persistent": true,
+         "hidden": false,
+         "clearOnHide": true,
+         "refreshOn": "",
+         "redrawOn": "",
+         "tableView": false,
+         "modalEdit": false,
+         "dataGridLabel": true,
+         "labelPosition": "right",
+         "description": "",
+         "errorLabel": "",
+         "tooltip": "",
+         "hideLabel": false,
+         "tabindex": "",
+         "autofocus": false,
+         "dbIndex": false,
+         "customDefaultValue": "",
+         "calculateValue": "",
+         "calculateServer": false,
+         "widget": null,
+         "attributes": {},
+         "validateOn": "change",
+         "validate": {
+          "required": false,
+          "custom": "",
+          "customPrivate": false,
+          "strictDateValidation": false,
+          "multiple": false,
+          "unique": false
+         },
+         "conditional": {
+          "show": null,
+          "when": null,
+          "eq": ""
+         },
+         "overlay": {
+          "style": "",
+          "left": "",
+          "top": "",
+          "width": "",
+          "height": ""
+         },
+         "allowCalculateOverride": false,
+         "encrypted": false,
+         "showCharCount": false,
+         "showWordCount": false,
+         "properties": {},
+         "allowMultipleMasks": false,
+         "addons": [],
+         "inputType": "checkbox",
+         "value": "",
+         "name": ""
+        }
+       ],
+       "placeholder": "",
+       "prefix": "",
+       "suffix": "",
+       "multiple": false,
+       "defaultValue": null,
+       "protected": false,
+       "unique": false,
+       "persistent": false,
+       "clearOnHide": true,
+       "refreshOn": "",
+       "redrawOn": "",
+       "dataGridLabel": false,
+       "labelPosition": "top",
+       "description": "",
+       "errorLabel": "",
+       "hideLabel": false,
+       "autofocus": false,
+       "dbIndex": false,
+       "customDefaultValue": "",
+       "calculateValue": "",
+       "calculateServer": false,
+       "widget": null,
+       "validateOn": "change",
+       "validate": {
+        "required": false,
+        "custom": "",
+        "customPrivate": false,
+        "strictDateValidation": false,
+        "multiple": false,
+        "unique": false
+       },
+       "allowCalculateOverride": false,
+       "encrypted": false,
+       "showCharCount": false,
+       "showWordCount": false,
+       "allowMultipleMasks": false,
+       "addons": [],
+       "tree": false,
+       "lazyLoad": false,
+       "id": "ez1buh"
+      },
+      {
+       "label": "Close",
+       "action": "event",
+       "showValidations": false,
+       "theme": "secondary",
+       "size": "lg",
+       "block": true,
+       "leftIcon": "fa fa-close",
+       "rightIcon": "",
+       "shortcut": "",
+       "description": "",
+       "tooltip": "",
+       "customClass": "",
+       "tabindex": "",
+       "disableOnInvalid": false,
+       "hidden": false,
+       "autofocus": false,
+       "disabled": false,
+       "tableView": false,
+       "modalEdit": false,
+       "key": "approve",
+       "tags": [],
+       "properties": {},
+       "conditional": {
+        "show": null,
+        "when": null,
+        "eq": "",
+        "json": ""
+       },
+       "customConditional": "",
+       "logic": [],
+       "attributes": {},
+       "overlay": {
+        "style": "",
+        "page": "",
+        "left": "",
+        "top": "",
+        "width": "",
+        "height": ""
+       },
+       "type": "button",
+       "event": "approve",
+       "input": false,
+       "placeholder": "",
+       "prefix": "",
+       "suffix": "",
+       "multiple": false,
+       "defaultValue": null,
+       "protected": false,
+       "unique": false,
+       "persistent": false,
+       "clearOnHide": true,
+       "refreshOn": "",
+       "redrawOn": "",
+       "dataGridLabel": true,
+       "labelPosition": "top",
+       "errorLabel": "",
+       "hideLabel": false,
+       "dbIndex": false,
+       "customDefaultValue": "",
+       "calculateValue": "",
+       "calculateServer": false,
+       "widget": {
+        "type": "input"
+       },
+       "validateOn": "change",
+       "validate": {
+        "required": false,
+        "custom": "",
+        "customPrivate": false,
+        "strictDateValidation": false,
+        "multiple": false,
+        "unique": false
+       },
+       "allowCalculateOverride": false,
+       "encrypted": false,
+       "showCharCount": false,
+       "showWordCount": false,
+       "allowMultipleMasks": false,
+       "addons": [],
+       "id": "ebozueq"
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

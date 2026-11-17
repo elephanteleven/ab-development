@@ -1,0 +1,21 @@
+diff --git a/app.js b/app.js
+index 659b843..59276a8 100644
+--- a/app.js
++++ b/app.js
+@@ -340,10 +340,14 @@ async function Do() {
+ 
+       await Promise.all(allUpdates);
+ 
+-      DB.destroy();
+       console.log("... all migrations have been performed.");
+       // setInterval(wait, 10000);
+-      process.exit();
++      // end() closes cleanly; destroy() makes MariaDB log "Aborted connection".
++      // The tenant queries ran on ab-utils' shared pool, so close that too.
++      const pool = new AB.reqService(mockReq(), mockController()).dbConnection(
++         false,
++      );
++      DB.end(() => (pool ? pool.end(() => process.exit()) : process.exit()));
+    } catch (e) {
+       console.error("!Unable to perform migration:");
+       console.error(e);

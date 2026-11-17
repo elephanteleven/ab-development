@@ -1,0 +1,35 @@
+diff --git a/ABFactory.js b/ABFactory.js
+index 0eea2c5..5c18a9e 100644
+--- a/ABFactory.js
++++ b/ABFactory.js
+@@ -142,7 +142,10 @@ class ABFactory extends ABFactoryCore {
+                   // FIX : ER_CON_COUNT_ERROR: Too many connections
+                   // https://github.com/tgriesser/knex/issues/1027
+                   pool: {
+-                     min: 2,
++                     // min: 0 lets tarn close idle connections (30 s) before
++                     // MariaDB's wait_timeout drops them; with min: 2 the last
++                     // two stayed open until they died with ECONNRESET.
++                     min: 0,
+                      max: config.poolMax || 30,
+                      // this should reduce Knex Timeout Errors
+                      // (https://github.com/knex/knex/issues/2820)
+diff --git a/package-lock.json b/package-lock.json
+index 5664177..d27ec45 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+    "name": "ab_platform_service",
+-   "version": "1.14.20+c22000",
++   "version": "1.14.21",
+    "lockfileVersion": 3,
+    "requires": true,
+    "packages": {
+       "": {
+          "name": "ab_platform_service",
+-         "version": "1.14.20+c22000",
++         "version": "1.14.21",
+          "license": "ISC",
+          "dependencies": {
+             "axios": "^1.7.7",

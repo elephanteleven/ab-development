@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 935752b..180f241 100644
+--- a/package.json
++++ b/package.json
+@@ -2,6 +2,7 @@
+    "name": "tenant_manager",
+    "version": "1.2.4",
+    "description": "(AppBuilder) A service to manage the site&#39;s tenants",
++   "type": "module",
+    "main": "app.js",
+    "author": "Johnny Hausman",
+    "license": "MIT",

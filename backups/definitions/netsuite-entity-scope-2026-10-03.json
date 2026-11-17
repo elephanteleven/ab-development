@@ -1,0 +1,50 @@
+{
+ "note": "SITE_SCOPE row 'Netsuite Entity' in the local admin tenant on 2026-10-03, before the cache-principal-change object and its two rules were added.",
+ "uuid": "387dba7d-862a-40d8-82e5-945ad4502e85",
+ "updated_at": "2026-05-18 09:08:08",
+ "objectIds": [
+  "ce921800-6957-46a4-a0de-86a0e81cd759",
+  "569650da-9f08-4ffb-acd4-4011d80c493f",
+  "2342524e-af8c-42ca-921a-eebb4c910279",
+  "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+  "527e22a3-a56b-4945-859f-a4006b1bd65f",
+  "b0e7f60f-5706-46f4-b0d9-f8a09bd8bae3",
+  "1213051e-d401-4368-bed3-bd58fcd1258e",
+  "d7d16a03-6977-4e40-bad1-077f1127ef34",
+  "7dbee553-0d15-40cb-9cf3-a8246c8383cb",
+  "af0c20b5-901c-4757-879b-5b7c6114210a",
+  "63667a9a-efb9-4cb0-b6e2-c3ed30550439",
+  "ef03c7cc-b880-4769-95ca-c1cff983cd1c"
+ ],
+ "Filters": {
+  "glue": "and",
+  "rules": [
+   {
+    "key": "89b067cd-dcc1-4886-ba8b-65f920062c70",
+    "rule": "in_query_field",
+    "value": "07e70170-e7b5-475c-ba5b-c79728c41197:89b067cd-dcc1-4886-ba8b-65f920062c70"
+   },
+   {
+    "key": "328e8c61-51ac-492b-b495-f803da50082f",
+    "rule": "in_query_field",
+    "value": "07e70170-e7b5-475c-ba5b-c79728c41197:89b067cd-dcc1-4886-ba8b-65f920062c70"
+   },
+   {
+    "key": "3a865653-8813-45f9-a9e5-32f343a02233",
+    "rule": "in_query_field",
+    "value": "07e70170-e7b5-475c-ba5b-c79728c41197:89b067cd-dcc1-4886-ba8b-65f920062c70"
+   },
+   {
+    "key": "38c4d77f-3c32-4eaf-aa60-5a624c4dea0e",
+    "rule": "in_query_field",
+    "value": "07e70170-e7b5-475c-ba5b-c79728c41197:89b067cd-dcc1-4886-ba8b-65f920062c70"
+   },
+   {
+    "key": "acfbfcd6-fcd4-42c9-968e-869be9ec7c5e",
+    "rule": "in_query_field",
+    "value": "07e70170-e7b5-475c-ba5b-c79728c41197:89b067cd-dcc1-4886-ba8b-65f920062c70"
+   }
+  ]
+ },
+ "allowAll": "0"
+}

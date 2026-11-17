@@ -1,0 +1,138 @@
+diff --git a/package-lock.json b/package-lock.json
+index 7021e4c..475b97c 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "name": "@digiserve/ab-utils",
+-  "version": "1.11.0",
++  "version": "1.11.1",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "@digiserve/ab-utils",
+-      "version": "1.11.0",
++      "version": "1.11.1",
+       "license": "MIT",
+       "dependencies": {
+         "@opentelemetry/api": "^1.9.0",
+@@ -472,7 +472,6 @@
+       "resolved": "https://registry.npmjs.org/@opentelemetry/api/-/api-1.9.1.tgz",
+       "integrity": "sha512-gLyJlPHPZYdAk1JENA9LeHejZe1Ti77/pTeFm/nMXmQH/HFZlcS/O2XJB+L8fkbrNSqhdtlvjBVjxwUYanNH5Q==",
+       "license": "Apache-2.0",
+-      "peer": true,
+       "engines": {
+         "node": ">=8.0.0"
+       }
+@@ -522,7 +521,6 @@
+       "resolved": "https://registry.npmjs.org/@opentelemetry/core/-/core-2.10.0.tgz",
+       "integrity": "sha512-/wNZ8twnEQQA4HoHu22+vcsdru6pWPWxW+7w+FlxT6Id7PE/WIbZmVKkte+PF72e0F2dnImFeHD2syyE1Mw6MQ==",
+       "license": "Apache-2.0",
+-      "peer": true,
+       "dependencies": {
+         "@opentelemetry/semantic-conventions": "^1.29.0"
+       },
+@@ -940,7 +938,6 @@
+       "resolved": "https://registry.npmjs.org/@opentelemetry/sdk-trace-base/-/sdk-trace-base-2.10.0.tgz",
+       "integrity": "sha512-GuYQQT7QD2EeO8lcZLRQzcbOyhqAzL+6WWTKTU9mSUBYBazkEDl+VrQcXQhbB08OWM9anD1aHleVadzulpOaUQ==",
+       "license": "Apache-2.0",
+-      "peer": true,
+       "dependencies": {
+         "@opentelemetry/core": "2.10.0",
+         "@opentelemetry/resources": "2.10.0",
+@@ -1296,7 +1293,6 @@
+       "integrity": "sha512-NoQ2yGlLWj4wpxMs+TYmRKk3thDrQ97agr7sFqfLsAlvoS8SNQuTrlObhFqG9iugdTtgOE9jpJ6FNM4ZGsa5xQ==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@types/linkify-it": "^5",
+         "@types/mdurl": "^2"
+@@ -1346,7 +1342,6 @@
+       "integrity": "sha512-lGq+9yr1/GuAWaVYIHRjvvySG5/4VfKIvC8EWxStPdcDh/Ka7FG3twP6v4d5BkravUilhIAsG4Qj83t02LWUPQ==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "bin": {
+         "acorn": "bin/acorn"
+       },
+@@ -2795,7 +2790,6 @@
+       "deprecated": "This version is no longer supported. Please see https://eslint.org/version-support for other options.",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@eslint-community/eslint-utils": "^4.8.0",
+         "@eslint-community/regexpp": "^4.12.1",
+@@ -2856,7 +2850,6 @@
+       "integrity": "sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "bin": {
+         "eslint-config-prettier": "bin/cli.js"
+       },
+@@ -4728,7 +4721,6 @@
+         }
+       ],
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "argparse": "^2.0.1",
+         "entities": "^4.5.0",
+diff --git a/utils/controller.js b/utils/controller.js
+index b44f3ba..16175fc 100644
+--- a/utils/controller.js
++++ b/utils/controller.js
+@@ -825,8 +825,8 @@ function tryConnect(dbConfig, cb, count = 0) {
+    //    DB.destroy();
+    // });
+    DB.connect(function (err) {
+-      DB.destroy();
+       if (err) {
++         DB.destroy();
+          if (count == 0) {
+             console.log("mysql not ready ... waiting.");
+          }
+@@ -837,6 +837,8 @@ function tryConnect(dbConfig, cb, count = 0) {
+          }, 500);
+          return;
+       }
++      // end() closes cleanly; destroy() makes MariaDB log "Aborted connection"
++      DB.end(() => {});
+       console.log("successful connection to mysql, continuing");
+       cb();
+    });
+diff --git a/utils/defaults.js b/utils/defaults.js
+index 3d08fdd..bd8ecd0 100644
+--- a/utils/defaults.js
++++ b/utils/defaults.js
+@@ -17,23 +17,10 @@ function env(envKey, defaultValue) {
+    }
+    try {
+       return JSON.parse(process.env[envKey]);
+-   } catch (e) {
+-      // NOT all of our env variables can be JSON.parsed()
+-      // we expect some of these values to error out
+-      // no need to report them:
+-      let expectedValues = ["http"];
+-      let isExpected = false;
+-      expectedValues.forEach((/*v*/) => {
+-         if (process.env[envKey].indexOf("http") != -1) {
+-            isExpected = true;
+-         }
+-      });
+-      if (!isExpected) {
+-         // let's report this just in case:
+-         console.log(e);
+-         console.log(`process.env[${envKey}]=[${process.env[envKey]}]`);
+-      }
+-
++   } catch {
++      // NOT all of our env variables can be JSON.parsed(): plain strings such as
++      // hosts, user names and passwords land here, and that is expected.
++      // Don't log the value; some of these are secrets.
+       return process.env[envKey];
+    }
+ }

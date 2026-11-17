@@ -1,0 +1,1113 @@
+diff --git a/ABViewOrgChartTeamsComponent.js b/ABViewOrgChartTeamsComponent.js
+index 657e4d2..5a6b43a 100644
+--- a/ABViewOrgChartTeamsComponent.js
++++ b/ABViewOrgChartTeamsComponent.js
+@@ -14,7 +14,6 @@ const PROGRESS_STATUS_DELAY = 500;
+ const PROGRESS_STATUS_KEY_COMMON = "common";
+ const PROGRESS_STATUS_KEY_PRINCIPAL = "principal";
+ const PROGRESS_STATUS_KEY_TEAM = "team";
+-const PROGRESS_STATUS_KEY_APPROVAL = "approval";
+ const PROGRESS_STATUS_VALUE_COMMON_INIT_PAGE = "Initializing page";
+ const PROGRESS_STATUS_VALUE_COMMON_INIT_DCs = "Initializing DCs";
+ const PROGRESS_STATUS_VALUE_COMMON_CHANGE_ENTITY = "Changing to a new entity";
+@@ -22,13 +21,17 @@ const PROGRESS_STATUS_VALUE_COMMON_REFRESHING = "Refreshing";
+ const PROGRESS_STATUS_VALUE_TEAM_CREATING = "Creating a team";
+ const PROGRESS_STATUS_VALUE_TEAM_UPDATING = "Updating a team";
+ const PROGRESS_STATUS_VALUE_WAIT_TITLE = "Please wait";
+-const PROGRESS_STATUS_VALUE_ANOTHER_ENTITY =
+-   "This user has a Principal Team Assignment in another entity.";
+-const PROGRESS_STATUS_VALUE_REASON_NEXT =
+-   "You'll be asked to enter a reason for the change.";
+ const PROGRESS_STATUS_VALUE_DO_NOT_CLOSE =
+    "Please don't close this window while it loads (around 15 seconds)";
+ const TIMEOUT_RETRY_PAGEDATA = 15000;
++// The status of a cache-principal-change row. The widget writes "pending";
++// the process "Principal Change Approval" moves it on to "applied",
++// "rejected", "failed" or "expired", and the widget then deletes the row.
++const PRINCIPAL_CHANGE_STATUS_PENDING = "pending";
++// A request is valid through the 7th day after it was sent, counted in UTC
++// days like the process's gateway "Has the Request Expired?". After that it
++// blocks no new request, and an answer to it changes nothing.
++const PRINCIPAL_CHANGE_EXPIRY_DAYS = 7;
+ 
+ //TODO (Guy): These should be ABDesigner settings.
+ const CONTENT_JOB_TITLE_COLUMNNAME = "custrecord_team_assign_job_title";
+@@ -68,6 +71,9 @@ export default function (ABViewComponent) {
+                   filterForm: "",
+                   contentForm: "",
+                   contentFormData: "",
++                  principalChangeForm: "",
++                  principalChangeNote: "",
++                  principalChangeWindow: "",
+                   progressStatus: "",
+                   teamForm: "",
+                   teamFormCode: "",
+@@ -271,9 +277,6 @@ export default function (ABViewComponent) {
+                settings.contentGroupByField
+             );
+             const contentGroupByColumnName = contentGroupByField.columnName;
+-            const contentPrincipleColumnName = this.AB.definitionByID(
+-               this.settings.contentPrincipleField
+-            ).columnName;
+             const contentFieldLinkColumnName = contentFieldLink.columnName;
+             const $group = event.currentTarget;
+             const $content = $group.parentElement;
+@@ -333,8 +336,6 @@ export default function (ABViewComponent) {
+                                     contentValue
+                                  )
+                               );
+-                              if (contentValue[contentPrincipleColumnName] == 1)
+-                                 this._addUserFormQueue(contentValue);
+                               draggedNodes.push($contentRecord);
+                               isRefreshed = true;
+                               isUpdated = true;
+@@ -581,8 +582,6 @@ export default function (ABViewComponent) {
+                            updatedValue
+                         )
+                      );
+-                     if (updatedValue[contentPrincipleColumnName] == 1)
+-                        this._addUserFormQueue(updatedValue);
+                   } else {
+                      const pendingPromises = [];
+                      // TODO (Guy): Force update Date End with a current date.
+@@ -1038,34 +1037,14 @@ export default function (ABViewComponent) {
+                         );
+                      }
+ 
+-                     // TODO (Guy): Trigger process update.
+                      if (customProcessTasks.needApproval) {
+-                        // Only announce the reason form when one is actually
+-                        // coming -- needApproval is what decides whether the
+-                        // user form below is raised.
+-                        self._addProgressStatusQueue(
+-                           PROGRESS_STATUS_KEY_APPROVAL,
++                        // The other entity's HR has to approve first, so
++                        // nothing is saved to NetSuite here.
++                        self._removeProgressStatusQueue(
++                           PROGRESS_STATUS_KEY_PRINCIPAL,
+                            customProcessTasks.employeeValueEmail
+                         );
+-                        await Promise.all([
+-                           new Promise((resolve) => {
+-                              self._addUserFormQueue(newFormData, {
+-                                 needUserForm: customProcessTasks.needApproval,
+-                                 callback: resolve,
+-                              });
+-                           }),
+-                           (async () => {
+-                              await DcContainer.list.content.model.update(
+-                                 dataID,
+-                                 {
+-                                    [contentPrincipleColumnName]: "1",
+-                                 }
+-                              );
+-                              DcContainer.list.content.model.update(dataID, {
+-                                 [contentPrincipleColumnName]: "0",
+-                              });
+-                           })(),
+-                        ]);
++                        await self._requestPrincipalChange(customProcessTasks);
+                      } else {
+                         if (isCreated) {
+                            const oldData = {};
+@@ -1092,18 +1071,11 @@ export default function (ABViewComponent) {
+                                  id: dataID,
+                               }
+                            );
+-                           if (newFormData[contentPrincipleColumnName] == 1)
+-                              self._addUserFormQueue(newFormData);
+                         }
+                         contentNodes.push({
+                            [dataID]: (!isEnded && newFormData) || null,
+                         });
+                      }
+-                     if (customProcessTasks.needApproval)
+-                        self._removeProgressStatusQueue(
+-                           PROGRESS_STATUS_KEY_APPROVAL,
+-                           customProcessTasks.employeeValueEmail
+-                        );
+                      if (isChangedToPrincipal)
+                         self._removeProgressStatusQueue(
+                            PROGRESS_STATUS_KEY_PRINCIPAL,
+@@ -1517,47 +1489,6 @@ export default function (ABViewComponent) {
+          const style = document.createElement("style");
+          style.innerHTML = css.join("");
+          document.getElementsByTagName("head")[0].appendChild(style);
+-
+-         // TODO (Guy): Hack!!!
+-         const processFormDataKey =
+-            "491956b4-c33c-49d7-b4fe-5ccd0911d62d.EmployeeEmail";
+-         this._userFormQueues = [];
+-         this._fnUserFormListener = this.AB._events["ab.task.userform"];
+-         this.AB.off("ab.task.userform", this._fnUserFormListener);
+-         this.AB.on("ab.task.userform", async (data) => {
+-            if (
+-               !Object.prototype.hasOwnProperty.call(
+-                  data.formData,
+-                  processFormDataKey
+-               )
+-            ) {
+-               this._fnUserFormListener(data);
+-               return;
+-            }
+-            if (this._userFormQueues.length === 0) return;
+-            const userFormQueueIndex = this._userFormQueues.findIndex(
+-               (e) =>
+-                  e.dataPanelRecord.email === data.formData[processFormDataKey]
+-            );
+-            if (userFormQueueIndex > -1) {
+-               const userFormQueue = this._userFormQueues.splice(
+-                  userFormQueueIndex,
+-                  1
+-               )[0];
+-               if (userFormQueue.needUserForm) this._fnUserFormListener(data);
+-               if (userFormQueue.callback) {
+-                  const result = userFormQueue.callback();
+-                  if (result instanceof Promise) {
+-                     try {
+-                        await result;
+-                     } catch (err) {
+-                        // TODO (Guy): Error log
+-                        console.error(err);
+-                     }
+-                  }
+-               }
+-            }
+-         });
+       }
+ 
+       _confirmBox(title, description, yes = "Yes", cancel = "Cancel") {
+@@ -1577,6 +1508,385 @@ export default function (ABViewComponent) {
+          });
+       }
+ 
++      // The other entity's HR has to approve this principal change. Nothing
++      // is saved to NetSuite here: one cache-principal-change row gets a copy
++      // of everything the approval needs, and the process
++      // "Principal Change Approval" (NetSuite HR Update) starts on it.
++      async _requestPrincipalChange(customProcessTasks) {
++         const webix = this.AB.Webix;
++         const escape = webix.template.escape;
++         try {
++            const principalChangeDC = DcContainer.list.principalChange;
++            // The plugin and the NetSuite HR Update definitions ship together.
++            if (principalChangeDC == null)
++               throw new Error(
++                  this.label(
++                     "The object cache-principal-change is missing in this tenant."
++                  )
++               );
++            // Read from the chart's own data collection, so no request goes
++            // to the server here. A request someone else sent after the chart
++            // loaded is not in it; the process checks NetSuite again before
++            // it writes anything, so such a duplicate changes nothing.
++            const pendingValues = principalChangeDC.getData(
++               (value) =>
++                  value.employee_email ===
++                     customProcessTasks.employeeValueEmail &&
++                  value.status === PRINCIPAL_CHANGE_STATUS_PENDING
++            );
++            const pendingValue = pendingValues.find(
++               (value) => !this._isPrincipalChangeExpired(value)
++            );
++            if (pendingValue) {
++               await webix.alert({
++                  title: this.label("Already waiting for approval"),
++                  ok: this.label("OK"),
++                  text: this.label(
++                     "{0} asked on {1} to make this person principal. That request is still waiting for the other entity's HR, so a new one cannot be sent yet. It expires after {2} (UTC); then a new one can be sent.",
++                     [
++                        escape(pendingValue.requested_by),
++                        escape(
++                           new Date(
++                              pendingValue.created_at
++                           ).toLocaleDateString()
++                        ),
++                        escape(
++                           this._principalChangeDayText(
++                              this._principalChangeExpiryDay(pendingValue)
++                           )
++                        ),
++                     ]
++                  ),
++               });
++               return;
++            }
++            // Only expired requests are left. They block nothing, and the
++            // process ignores a late answer to them, so remove them.
++            await Promise.all(
++               pendingValues.map((value) => this._removePrincipalChange(value))
++            );
++            // Read what the request needs while the user writes the reason.
++            const pendingRequest = customProcessTasks.principalChangeRequest();
++            pendingRequest.catch(() => {});
++            const reason = await this._askPrincipalChangeReason(
++               customProcessTasks.employeeValue,
++               pendingRequest
++            );
++            if (reason == null) return;
++            const request = await pendingRequest;
++            const expiresOn = this._principalChangeNewExpiryDay();
++            const value = await principalChangeDC.model.create({
++               ...request,
++               status: PRINCIPAL_CHANGE_STATUS_PENDING,
++               reason,
++               requested_by: this.AB.Account.email(),
++               expires_on: expiresOn,
++            });
++            this.parseDCData(principalChangeDC, value);
++            webix.alert({
++               title: this.label("Sent for approval"),
++               ok: this.label("OK"),
++               text: this.label(
++                  "The HR of {0} will get it in their inbox. This assignment becomes principal when they approve. Until then nothing changes. If they have not approved it by {1} (UTC), the request expires and you can send it again.",
++                  [
++                     escape(
++                        request.other_entity_name ||
++                           this.label("the other entity")
++                     ),
++                     escape(this._principalChangeDayText(expiresOn)),
++                  ]
++               ),
++            });
++         } catch (err) {
++            console.error(err);
++            webix.alert({
++               title: this.label("Could not send the principal change"),
++               ok: this.label("OK"),
++               type: "alert-error",
++               text: escape(err?.message ?? err),
++            });
++         }
++      }
++
++      // Resolves the reason the user typed, or null when they cancel.
++      _askPrincipalChangeReason(employeeValue, pendingRequest) {
++         const webix = this.AB.Webix;
++         const escape = webix.template.escape;
++         const ids = this.ids;
++         // A function, so webix does not read "#" in a name as a placeholder.
++         const note = (entityName) => () =>
++            this.label(
++               "{0} is principal in {1} now. The HR of that entity must approve before this assignment becomes principal. Until then nothing changes, and other changes in this form wait too.",
++               [
++                  `<b>${escape(
++                     `${employeeValue.firstname ?? ""} ${
++                        employeeValue.lastname ?? ""
++                     }`.trim()
++                  )}</b>`,
++                  entityName
++                     ? `<b>${escape(entityName)}</b>`
++                     : this.label("another entity"),
++               ]
++            );
++         return new Promise((resolve) => {
++            let isDone = false;
++            const done = (reason) => {
++               if (isDone) return;
++               isDone = true;
++               $$(ids.principalChangeWindow)?.close();
++               resolve(reason);
++            };
++            $$(ids.principalChangeWindow)?.destructor();
++            webix
++               .ui({
++                  view: "window",
++                  id: ids.principalChangeWindow,
++                  modal: true,
++                  move: true,
++                  position: "center",
++                  width: 480,
++                  css: { "border-radius": "10px" },
++                  head: {
++                     view: "toolbar",
++                     css: "webix_dark team-form-header",
++                     cols: [
++                        {
++                           view: "label",
++                           label: this.label("Principal change needs approval"),
++                        },
++                     ],
++                  },
++                  body: {
++                     view: "form",
++                     id: ids.principalChangeForm,
++                     elements: [
++                        {
++                           view: "template",
++                           id: ids.principalChangeNote,
++                           template: note(),
++                           autoheight: true,
++                           borderless: true,
++                        },
++                        {
++                           view: "textarea",
++                           name: "reason",
++                           label: this.label("Reason"),
++                           labelPosition: "top",
++                           height: 140,
++                           invalidMessage: this.label("Please enter a reason"),
++                        },
++                        {
++                           cols: [
++                              {},
++                              {
++                                 view: "button",
++                                 value: this.label("Cancel"),
++                                 width: 100,
++                                 click: () => done(null),
++                              },
++                              {
++                                 view: "button",
++                                 css: "webix_primary",
++                                 value: this.label("Send for approval"),
++                                 width: 160,
++                                 click: () => {
++                                    const $form = $$(ids.principalChangeForm);
++                                    const reason = (
++                                       $form.getValues().reason ?? ""
++                                    ).trim();
++                                    if (reason === "") {
++                                       $form.markInvalid("reason");
++                                       return;
++                                    }
++                                    done(reason);
++                                 },
++                              },
++                           ],
++                        },
++                     ],
++                  },
++                  on: {
++                     onHide: () => done(null),
++                  },
++               })
++               .show();
++            pendingRequest
++               .then((request) => {
++                  const $note = $$(ids.principalChangeNote);
++                  if (!$note || !request.other_entity_name) return;
++                  $note.define("template", note(request.other_entity_name));
++                  $note.refresh();
++               })
++               .catch(() => {});
++         });
++      }
++
++      // Rows the process has finished with ("applied", "rejected", "failed",
++      // "expired") are not needed any more: the process cannot delete them
++      // itself. Expired requests go too; a late answer to one finds no row,
++      // which the process skips (seen in the sandbox on 2026-10-04).
++      async _removeFinishedPrincipalChanges() {
++         const principalChangeDC = DcContainer.list.principalChange;
++         if (principalChangeDC == null) return;
++         if (!this._roles.isHRG && !this._roles.isAdmin) return;
++         await Promise.all(
++            principalChangeDC
++               .getData(
++                  (value) =>
++                     value.status !== PRINCIPAL_CHANGE_STATUS_PENDING ||
++                     this._isPrincipalChangeExpired(value)
++               )
++               .map((value) => this._removePrincipalChange(value))
++         );
++      }
++
++      // A new request is valid through this UTC day ("YYYY-MM-DD").
++      _principalChangeNewExpiryDay() {
++         const day = new Date();
++         day.setUTCDate(day.getUTCDate() + PRINCIPAL_CHANGE_EXPIRY_DAYS);
++         return day.toISOString().slice(0, 10);
++      }
++
++      // The last UTC day a request is valid. Rows from before expires_on
++      // existed count from created_at.
++      _principalChangeExpiryDay(value) {
++         const day = this._principalChangeDay(value.expires_on);
++         if (day != null) return day;
++         const created = new Date(value.created_at);
++         if (isNaN(created)) return null;
++         created.setUTCDate(
++            created.getUTCDate() + PRINCIPAL_CHANGE_EXPIRY_DAYS
++         );
++         return created.toISOString().slice(0, 10);
++      }
++
++      _isPrincipalChangeExpired(value) {
++         const day = this._principalChangeExpiryDay(value);
++         return day != null && day < new Date().toISOString().slice(0, 10);
++      }
++
++      // The calendar day a date field holds. The browser model gives local
++      // midnight (2026-10-09T17:00:00.000Z for 2026-10-10 at UTC+7), the
++      // server UTC midnight, so read each the way it was written.
++      _principalChangeDay(date) {
++         if (date == null || date === "") return null;
++         if (
++            typeof date === "string" &&
++            /^\d{4}-\d{2}-\d{2}($|T00:00:00(\.0+)?Z$)/.test(date)
++         )
++            return date.slice(0, 10);
++         const local = new Date(date);
++         if (isNaN(local)) return null;
++         return [local.getFullYear(), local.getMonth() + 1, local.getDate()]
++            .map((part) => String(part).padStart(2, "0"))
++            .join("-");
++      }
++
++      // "YYYY-MM-DD" in the user's date format, without a time zone shift.
++      _principalChangeDayText(day) {
++         if (day == null) return "";
++         return new Date(`${day}T00:00:00Z`).toLocaleDateString(undefined, {
++            timeZone: "UTC",
++         });
++      }
++
++      async _removePrincipalChange(value) {
++         const principalChangeDC = DcContainer.list.principalChange;
++         try {
++            // Every chart that loaded the row gets the same update, so another
++            // one may delete it first; the server then answers numRows 0.
++            await principalChangeDC.model.delete(value.uuid);
++         } catch (err) {
++            console.error(err);
++         }
++         if (principalChangeDC.$dc.exists(value.id))
++            principalChangeDC.$dc.remove(value.id);
++      }
++
++      // The server sends a row's changes to every chart that loaded or
++      // created it, so this runs when the process finishes a request while
++      // the chart is open.
++      async _onPrincipalChangeUpdate(value) {
++         if (
++            value?.status == null ||
++            value.status === PRINCIPAL_CHANGE_STATUS_PENDING
++         )
++            return;
++         await this._removePrincipalChange(value);
++         const escape = this.AB.Webix.template.escape;
++         const name = escape(
++            `${value.employee_firstname ?? ""} ${
++               value.employee_lastname ?? ""
++            }`.trim()
++         );
++         if (value.requested_by === this.AB.Account.email()) {
++            const message = {
++               applied: this.label("Approved: {0} is now principal in {1}.", [
++                  name,
++                  escape(value.entity_name),
++               ]),
++               rejected: this.label(
++                  "Rejected by the HR of {0}: nothing changed for {1}.",
++                  [escape(value.other_entity_name), name]
++               ),
++               failed: this.label(
++                  "Not applied: the assignments of {0} changed before the approval, so nothing changed.",
++                  [name]
++               ),
++               expired: this.label(
++                  "Expired: the HR of {0} did not approve within {1} days, so nothing changed for {2}. You can send the request again.",
++                  [
++                     escape(value.other_entity_name),
++                     String(PRINCIPAL_CHANGE_EXPIRY_DAYS),
++                     name,
++                  ]
++               ),
++            }[value.status];
++            if (message)
++               this.AB.Webix.message({
++                  type: value.status === "applied" ? "success" : "error",
++                  text: message,
++                  expire: 15000,
++               });
++         }
++         // The process ended and created assignments in NetSuite. Its new
++         // rows reach no browser (process_manager writes them without a
++         // broadcast), and the reload the chart's own update events start
++         // comes before they exist (seen 2026-10-04), so read them again.
++         const entityDC = DcContainer.list.entity;
++         const entityPK = entityDC?.getCursor()?.[entityDC.datasource.PK()];
++         if (
++            value.status === "applied" &&
++            entityPK != null &&
++            [value.entity_id, value.other_entity_id].indexOf(
++               entityPK.toString()
++            ) > -1
++         )
++            this._refreshWhenIdle();
++      }
++
++      // Refresh once the chart is not busy and no form is open, so nothing
++      // the user is typing gets lost. Gives up after a minute.
++      async _refreshWhenIdle() {
++         for (let tries = 0; tries < 60; tries++) {
++            if (
++               this._progressStatusQueues.length === 0 &&
++               !window.document.querySelector(".webix_modal_box") &&
++               ![
++                  this.ids.contentForm,
++                  this.ids.principalChangeWindow,
++                  this.ids.teamFormPopup,
++               ].some((id) => $$(id)?.isVisible())
++            ) {
++               // refresh() only redraws what the DCs hold.
++               await this._reloadDC(DcContainer.list.content);
++               await this.refresh();
++               return;
++            }
++            await this._utils.timeout(CONST.ONE_SECOND);
++         }
++      }
++
+       _addContentRecordToGroup(contentRecord, callback) {
+          const linkedContentColumnName = this.AB.definitionByID(
+             this.AB.definitionByID(this.settings.contentField).settings
+@@ -2447,28 +2757,6 @@ export default function (ABViewComponent) {
+          return this.AB.definitionByID(connectFieldID)?.settings?.linkObject;
+       }
+ 
+-      // TODO (Guy): Hardcode to hide the reason popup to prevent to continue the next process task
+-      _addUserFormQueue(
+-         contentValue,
+-         { callback, needUserForm } = { callback: null, needUserForm: false }
+-      ) {
+-         const dataPanelDC = DcContainer.list.contentDisplays.find(
+-            (contentDisplayDC) =>
+-               contentDisplayDC.datasource ===
+-               DcContainer.list.dataPanels[0].datasource
+-         );
+-         const dataPanelPK = dataPanelDC.datasource.PK();
+-         this._userFormQueues.push({
+-            dataPanelRecord: dataPanelDC.getData(
+-               (e) =>
+-                  e[dataPanelPK] ==
+-                  contentValue[CONTENT_LINK_DATAPANEL_COLUMNNAME]
+-            )[0],
+-            callback,
+-            needUserForm,
+-         });
+-      }
+-
+       _isLessThanDay(date) {
+          return Math.abs(new Date() - date) / 36e5 < 24;
+       }
+@@ -2831,15 +3119,11 @@ export default function (ABViewComponent) {
+             this.busy();
+             const commonQueues = [];
+             const principalQueues = [];
+-            const approvalQueues = [];
+             for (const { key, value } of this._progressStatusQueues) {
+                switch (key) {
+                   case PROGRESS_STATUS_KEY_PRINCIPAL:
+                      principalQueues.push(value);
+                      break;
+-                  case PROGRESS_STATUS_KEY_APPROVAL:
+-                     approvalQueues.push(value);
+-                     break;
+                   default:
+                      commonQueues.push(value);
+                      break;
+@@ -2875,16 +3159,10 @@ export default function (ABViewComponent) {
+                template: templateElements.join(""),
+             });
+ 
+-            // The spinner alone gives no indication of how long this will take.
+-            // A principal change is completed by a server side process, and the
+-            // reason form it raises can take ~15s to arrive, so show the same
+-            // information as the tooltip without requiring a hover.
++            // The spinner alone gives no indication of how long this will take,
++            // so show the same information as the tooltip without requiring a
++            // hover.
+             const messages = commonQueues.map((e) => this.label(e));
+-            if (approvalQueues.length > 0)
+-               messages.push(
+-                  this.label(PROGRESS_STATUS_VALUE_ANOTHER_ENTITY),
+-                  this.label(PROGRESS_STATUS_VALUE_REASON_NEXT)
+-               );
+             if (principalQueues.length > 0)
+                messages.push(this.label(PROGRESS_STATUS_VALUE_DO_NOT_CLOSE));
+             $progressStatus.define(
+@@ -3581,6 +3859,9 @@ export default function (ABViewComponent) {
+             CONST.EVENT_CHANGE_CURSOR,
+             this._fnChangeEntity
+          );
++         DcContainer.list.principalChange?.on("update", (value) =>
++            this._onPrincipalChangeUpdate(value)
++         );
+       }
+ 
+       _initRole() {
+@@ -3725,70 +4006,69 @@ export default function (ABViewComponent) {
+             PROGRESS_STATUS_KEY_COMMON,
+             PROGRESS_STATUS_VALUE_COMMON_REFRESHING
+          );
++         try {
++            this._removeFinishedPrincipalChanges();
+ 
+-         this.switchDataPanel(this._selectedDataPanel);
++            this.switchDataPanel(this._selectedDataPanel);
+ 
+-         const ids = this.ids;
+-         $$(ids.teamFormPopup)?.destructor();
+-         $$(ids.contentForm)?.destructor();
++            const ids = this.ids;
++            $$(ids.teamFormPopup)?.destructor();
++            $$(ids.contentForm)?.destructor();
+ 
+-         let tasks = [];
++            let tasks = [];
+ 
+-         // Load data of the Team Object
+-         await this._fetchAllData(this.datacollection);
+-         this._refreshOrgChart();
++            // Load data of the Team Object
++            await this._fetchAllData(this.datacollection);
++            this._refreshOrgChart();
+ 
+-         // Render RC section
+-         tasks.push(
+-            new Promise(async (next) => {
+-               await this._utils.waitDOM();
++            // Render RC section
++            tasks.push(
++               (async () => {
++                  await this._utils.waitDOM();
+ 
+-               this._refreshRcView();
+-               next();
+-            })
+-         );
++                  this._refreshRcView();
++               })()
++            );
+ 
+-         let loadDcs = [
+-            DcContainer.list.content,
+-            ...DcContainer.list.contentDisplays,
+-         ];
+-         // Remove duplicate DCs
+-         loadDcs = loadDcs.filter(function (dc, pos) {
+-            return loadDcs.findIndex((dc2) => dc.id == dc2.id) == pos;
+-         });
++            let loadDcs = [
++               DcContainer.list.content,
++               ...DcContainer.list.contentDisplays,
++            ];
++            // Remove duplicate DCs
++            loadDcs = loadDcs.filter(function (dc, pos) {
++               return loadDcs.findIndex((dc2) => dc.id == dc2.id) == pos;
++            });
+ 
+-         tasks = tasks.concat([
+-            ...loadDcs.map(
+-               (dc) =>
+-                  new Promise(async (next) => {
+-                     await this._fetchAllData(dc);
+-                     next();
+-                  })
+-            ),
+-         ]);
++            tasks = tasks.concat(loadDcs.map((dc) => this._fetchAllData(dc)));
+ 
+-         await Promise.all(tasks);
++            await Promise.all(tasks);
+ 
+-         this._refreshContentView();
+-         // this._refreshDataPanel();
++            this._refreshContentView();
++            // this._refreshDataPanel();
+ 
+-         const topTeamColumnName = this.AB.definitionByID(
+-            this.settings.topTeam
+-         ).columnName;
++            const topTeamColumnName = this.AB.definitionByID(
++               this.settings.topTeam
++            ).columnName;
+ 
+-         if (
+-            this.datacollection.getData((e) => e[topTeamColumnName] == 1)
+-               .length === 0
+-         )
+-            this.AB.Webix.alert({
+-               title: `${this.label("Warning")}: ${this.label("No Team")}`,
+-               ok: this.label("OK"),
+-               text: this.label("No team is assigned to this entity"),
+-            });
+-         this._removeProgressStatusQueue(
+-            PROGRESS_STATUS_KEY_COMMON,
+-            PROGRESS_STATUS_VALUE_COMMON_REFRESHING
+-         );
++            if (
++               this.datacollection.getData((e) => e[topTeamColumnName] == 1)
++                  .length === 0
++            )
++               this.AB.Webix.alert({
++                  title: `${this.label("Warning")}: ${this.label("No Team")}`,
++                  ok: this.label("OK"),
++                  text: this.label("No team is assigned to this entity"),
++               });
++         } catch (err) {
++            // TODO (Guy): The update data error.
++            console.error(err);
++         } finally {
++            // Always take "Refreshing" off: a failed step used to leave it up.
++            this._removeProgressStatusQueue(
++               PROGRESS_STATUS_KEY_COMMON,
++               PROGRESS_STATUS_VALUE_COMMON_REFRESHING
++            );
++         }
+       }
+ 
+       async updateData(dc, value) {
+diff --git a/components/constants.js b/components/constants.js
+index 839597c..6ef6a93 100644
+--- a/components/constants.js
++++ b/components/constants.js
+@@ -13,6 +13,10 @@ export default {
+    RESPONSIBILITY_CENTRE_DC_ID: "3791954c-89c4-4372-84af-9fe8a0b0bec8",
+    RESPONSIBILITY_CENTRE_INACTIVE_FIELD_ID:
+       "0247418d-9855-11f0-a3a3-0242ac150003",
++   // "cache-principal-change" (NetSuite HR Update): a principal change that
++   // waits for the other entity's approval. Its process is
++   // "cache-principal-change approval".
++   CACHE_PRINCIPAL_CHANGE_OBJECT_ID: "044cda33-b858-47d0-851b-a106f149a15f",
+ 
+    ROLE_SYSTEM_ADMIN: "dd6c2d34-0982-48b7-bc44-2456474edbea",
+    ROLE_HRG: "39ae03d7-0350-4227-b6e1-e03777688eff",
+diff --git a/components/data_panel/rcDataPanel.js b/components/data_panel/rcDataPanel.js
+index 9418e4c..5464440 100644
+--- a/components/data_panel/rcDataPanel.js
++++ b/components/data_panel/rcDataPanel.js
+@@ -36,6 +36,9 @@ export default class RcDataPanel extends DataPanel {
+       DcContainer.list.responsibilityCenter = this.AB.datacollectionByID(
+          CONST.RESPONSIBILITY_CENTRE_DC_ID
+       );
++      // refresh() loads it before Utils.initDC() would guard it.
++      if (DcContainer.list.responsibilityCenter)
++         Utils.guardDC(DcContainer.list.responsibilityCenter);
+       // DcContainer.list.responsibilityCenter.init();
+       // Utils.initDC(DcContainer.list.responsibilityCenter);
+ 
+diff --git a/components/dcContainer.js b/components/dcContainer.js
+index b6c1ec5..b647591 100644
+--- a/components/dcContainer.js
++++ b/components/dcContainer.js
+@@ -10,6 +10,7 @@ export default class DcContainer {
+             contentDisplays: [],
+             dataPanels: [],
+             entity: null,
++            principalChange: null,
+             responsibility: null,
+             responsibilityCenter: null,
+             strategyCode: null,
+@@ -58,6 +59,13 @@ export default class DcContainer {
+          ),
+          { loadAll: true }
+       );
++      // Principal changes waiting for, or just past, the other entity's
++      // approval. Not linked to the entity DC: a request belongs to two
++      // entities, and the HR scope already limits the rows to the user's.
++      this.list.principalChange = this._utils.createCustomDCByObjID(
++         CONST.CACHE_PRINCIPAL_CHANGE_OBJECT_ID,
++         { loadAll: true }
++      );
+ 
+       // Preparing for the entity DC and wait for setting a cursor.
+       const entityDC = (this.list.entity = teamDC.datacollectionLink);
+diff --git a/components/utils.js b/components/utils.js
+index 2f21b0a..77b2907 100644
+--- a/components/utils.js
++++ b/components/utils.js
+@@ -1,5 +1,8 @@
+ import CONST from "./constants.js";
+ 
++// How many times retryFailedLoads() tries a DC load before giving up.
++const LOAD_ATTEMPTS = 3;
++
+ export default class OrgChartUtils {
+    constructor(AB) {
+       this.AB = AB;
+@@ -73,15 +76,110 @@ export default class OrgChartUtils {
+    }
+ 
+    static initDC(dc) {
++      OrgChartUtils.guardDC(dc);
+       dc.init();
+-      if (dc.dataStatus === dc.dataStatusFlag.notInitial) dc.loadData();
++      if (dc.dataStatus === dc.dataStatusFlag.notInitial)
++         dc.loadData().catch((err) => console.error(err));
++   }
++
++   /**
++    * Keep a DC's loads from hanging the chart (see the two methods below).
++    * @param {ABDataCollection} dc
++    */
++   static guardDC(dc) {
++      OrgChartUtils.settleDroppedReplies(dc);
++      OrgChartUtils.retryFailedLoads(dc);
++   }
++
++   /**
++    * WORKAROUND: a load that fails leaves the platform's DC "initializing"
++    * for good, so .waitDCReady() waited on it forever ("Initializing DCs"
++    * after NetSuite answered one read with a 503). Try a failed load again,
++    * and if it keeps failing, note it so .waitDCReady() goes on without it.
++    * @param {ABDataCollection} dc
++    */
++   static retryFailedLoads(dc) {
++      if (dc.__retryFailedLoads) return;
++      dc.__retryFailedLoads = true;
++
++      const loadData = dc.loadData.bind(dc);
++      dc.loadData = async (...params) => {
++         for (let attempt = 1; ; attempt++) {
++            try {
++               const result = await loadData(...params);
++               delete dc.__loadError;
++               return result;
++            } catch (err) {
++               if (attempt >= LOAD_ATTEMPTS) {
++                  dc.__loadError = err;
++                  throw err;
++               }
++               console.warn(
++                  `HRTeams: loading "${dc.datasource?.label}" failed, trying again`,
++                  err
++               );
++               await new Promise((resolve) =>
++                  setTimeout(resolve, attempt * CONST.ONE_SECOND)
++               );
++            }
++         }
++      };
++   }
++
++   /**
++    * WORKAROUND: the platform's DC.processIncomingData() parses only the last
++    * reply that reaches a DC within 100 ms, and settles only that reply's
++    * .loadData(). The jobs of the replies it dropped stay pending for good,
++    * and so does a .reloadPromise waiting on one, which kept the chart on
++    * "Refreshing". Settle them once the reply that replaced them is parsed.
++    * @param {ABDataCollection} dc
++    */
++   static settleDroppedReplies(dc) {
++      if (dc.__settleDroppedReplies) return;
++      dc.__settleDroppedReplies = true;
++
++      const processIncomingData = dc.processIncomingData.bind(dc);
++      // The jobs whose replies wait in the platform's 100 ms throttle.
++      let waitingJobIDs = [];
++      dc.processIncomingData = (data) => {
++         const pending = dc._pendingLoadDataResolves;
++         const jobID = data?.jobID;
++         if (jobID && pending[jobID]) {
++            const droppedJobIDs = waitingJobIDs.filter(
++               (id) => id !== jobID && pending[id]
++            );
++            waitingJobIDs = [jobID];
++            if (droppedJobIDs.length > 0) {
++               const lastJob = pending[jobID];
++               const resolveLastJob = lastJob.resolve;
++               lastJob.resolve = (...params) => {
++                  droppedJobIDs.forEach((id) => {
++                     dc._pendingLoadDataResolves[id]?.resolve();
++                     delete dc._pendingLoadDataResolves[id];
++                  });
++                  console.warn(
++                     `HRTeams: settled ${droppedJobIDs.length} dropped load(s) of "${dc.datasource?.label}"`
++                  );
++                  return resolveLastJob(...params);
++               };
++            }
++         }
++         return processIncomingData(data);
++      };
+    }
+ 
+    // TODO (Guy): Some DC.waitReady() won't be resolved.
+    async waitDCReady(dc) {
+       // Wait for the next event loop
+       await Promise.resolve();
+-      if (dc.reloadPromise != null) await dc.reloadPromise;
++      if (dc.reloadPromise != null) {
++         try {
++            await dc.reloadPromise;
++         } catch (err) {
++            // It failed even after retryFailedLoads(): go on without it.
++            console.error(err);
++         }
++      }
+ 
+       switch (dc.dataStatus) {
+          case dc.dataStatusFlag.initialized:
+@@ -95,6 +193,11 @@ export default class OrgChartUtils {
+                      dc.emit("initializedData");
+                      return;
+                   }
++                  // Its first load failed for good (retryFailedLoads()).
++                  if (dc.__loadError) {
++                     resolve();
++                     return;
++                  }
+                   timeoutID = setTimeout(forceDCReady, CONST.ONE_SECOND);
+                };
+                timeoutID = setTimeout(forceDCReady, CONST.ONE_SECOND);
+diff --git a/libs/CustomProcessTasks.js b/libs/CustomProcessTasks.js
+index 692b6e0..d08626e 100644
+--- a/libs/CustomProcessTasks.js
++++ b/libs/CustomProcessTasks.js
+@@ -1,6 +1,11 @@
+ // TODO (Guy): Figure out how to get these field.
++const ASSIGNMENT_JOB_DESCRIPTION_COLUMNNAME = "custrecord_team_assign_job_desc";
++const ASSIGNMENT_JOB_TITLE_COLUMNNAME = "custrecord_team_assign_job_title";
+ const EMPLOYEE_EMAIL_COLUMNNAME = "email";
++const EMPLOYEE_FIRSTNAME_COLUMNNAME = "firstname";
++const EMPLOYEE_LASTNAME_COLUMNNAME = "lastname";
+ const EMPLOYEE_ORG_RELATIONSHIP_COLUMNNAME = "custentity_ccc_org_relation";
++const ENTITY_NAME_COLUMNNAME = "name";
+ const EXTERNAL_SUPPORT_COLUMNNAME = "custrecord_whq_team_is_external_support";
+ export default class CustomProcessTasks {
+    constructor(instance, input, oldInputs = []) {
+@@ -55,6 +60,9 @@ export default class CustomProcessTasks {
+       this._assignmentPrincipleColumnName = this._AB.definitionByID(
+          this._settings.contentPrincipleField
+       ).columnName;
++      this._assignmentRoleTypeColumnName = this._AB.definitionByID(
++         this._settings.contentGroupByField
++      ).columnName;
+       this._employeeValuePK = parseInt(
+          this._input[this._assignmentLinkingEmployeeColumnName]
+       );
+@@ -66,6 +74,7 @@ export default class CustomProcessTasks {
+       // Cached states;
+       this._isExternalSupport = null;
+       this._needApproval = false;
++      this._otherPrincipalAssignments = [];
+       this._updatedPrincipals = [];
+    }
+ 
+@@ -283,11 +292,111 @@ export default class CustomProcessTasks {
+          this._instance.ORG_SENT_STATUSES.indexOf(
+             this._employeeValue[EMPLOYEE_ORG_RELATIONSHIP_COLUMNNAME]?.toString()
+          ) === -1
+-      )
++      ) {
+          this._needApproval = isChanging;
++         this._otherPrincipalAssignments = principalAssignmentValues;
++      }
+       return this._input;
+    }
+ 
++   /**
++    * The values of a cache-principal-change row: a copy of everything the
++    * approval process needs, so that it never has to look it up in NetSuite.
++    * Call it after run() has set needApproval.
++    * @return {Promise<object>}
++    */
++   async principalChangeRequest() {
++      // When the person has more than one principal elsewhere (bad data), the
++      // first one is asked, as the "Updated Assignments" process used to do.
++      const otherValue = this._otherPrincipalAssignments[0];
++      const teamNameColumnName = this._AB.definitionByID(
++         this._settings.teamName
++      ).columnName;
++      // The HR scope hides other entities' Team and NS Entity rows, so their
++      // names come from the other assignment's relations instead.
++      const relationName = (columnName) =>
++         this._assignmentOBJ
++            .connectFields((field) => field.columnName === columnName)[0]
++            .relationName();
++      const otherValueWithNames =
++         (
++            await this._assignmentModel.findAll({
++               where: {
++                  glue: "and",
++                  rules: [
++                     {
++                        key: this._assignmentPK,
++                        rule: "equals",
++                        value: otherValue[this._assignmentPK],
++                     },
++                  ],
++               },
++               populate: [
++                  this._assignmentLinkingTeamColumnName,
++                  this._assignmentLinkingEntityColumnName,
++               ],
++            })
++         ).data[0] ?? {};
++      const text = (value) => (value == null ? "" : value.toString());
++      return {
++         assignment_id: text(this._input[this._assignmentPK]),
++         employee_id: text(
++            this._input[this._assignmentLinkingEmployeeColumnName]
++         ),
++         employee_email: text(this._employeeValueEmail),
++         employee_firstname: text(
++            this._employeeValue[EMPLOYEE_FIRSTNAME_COLUMNNAME]
++         ),
++         employee_lastname: text(
++            this._employeeValue[EMPLOYEE_LASTNAME_COLUMNNAME]
++         ),
++         entity_id: text(
++            this._input[this._assignmentLinkingEntityColumnName] ??
++               this._entityValuePK
++         ),
++         entity_name: text(
++            this._entityDC.getCursor()?.[ENTITY_NAME_COLUMNNAME]
++         ),
++         team_id: text(this._input[this._assignmentLinkingTeamColumnName]),
++         team_name: text(
++            this._findDCRecordByPK(
++               this._teamDC,
++               this._input[this._assignmentLinkingTeamColumnName]
++            )?.[teamNameColumnName]
++         ),
++         role_type_id: text(this._input[this._assignmentRoleTypeColumnName]),
++         job_title: text(this._input[ASSIGNMENT_JOB_TITLE_COLUMNNAME]),
++         job_description: text(
++            this._input[ASSIGNMENT_JOB_DESCRIPTION_COLUMNNAME]
++         ),
++         other_assignment_id: text(otherValue[this._assignmentPK]),
++         other_employee_id: text(
++            otherValue[this._assignmentLinkingEmployeeColumnName]
++         ),
++         other_entity_id: text(
++            otherValue[this._assignmentLinkingEntityColumnName]
++         ),
++         other_entity_name: text(
++            otherValueWithNames[
++               relationName(this._assignmentLinkingEntityColumnName)
++            ]?.[ENTITY_NAME_COLUMNNAME]
++         ),
++         other_team_id: text(otherValue[this._assignmentLinkingTeamColumnName]),
++         other_team_name: text(
++            otherValueWithNames[
++               relationName(this._assignmentLinkingTeamColumnName)
++            ]?.[teamNameColumnName]
++         ),
++         other_role_type_id: text(
++            otherValue[this._assignmentRoleTypeColumnName]
++         ),
++         other_job_title: text(otherValue[ASSIGNMENT_JOB_TITLE_COLUMNNAME]),
++         other_job_description: text(
++            otherValue[ASSIGNMENT_JOB_DESCRIPTION_COLUMNNAME]
++         ),
++      };
++   }
++
+    async hasPrincipalInEntity() {
+       return (await this._getPrincipalAssignmentValues()).length > 0;
+    }
+@@ -311,6 +420,10 @@ export default class CustomProcessTasks {
+       return this._updatedPrincipals;
+    }
+ 
++   get employeeValue() {
++      return this._employeeValue;
++   }
++
+    get employeeValueEmail() {
+       return this._employeeValueEmail;
+    }

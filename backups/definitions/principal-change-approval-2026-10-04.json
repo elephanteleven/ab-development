@@ -1,0 +1,1916 @@
+{
+ "note": "Principal Change Approval (0d8b7f1a-b561-407d-a768-29f955ea387a) in the local admin tenant, read from appbuilder_definition on 2026-10-04 before the 7-day expiry was added. One process row and its 19 elements.",
+ "definitions": [
+  {
+   "id": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+   "type": "process",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Principal Change Approval"
+     }
+    ],
+    "id": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "name": "Principal Change Approval",
+    "xmlDefinition": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bpmn2:definitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bpmn2=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:dc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:di=\"http://www.omg.org/spec/DD/20100524/DI\" id=\"sample-diagram\" targetNamespace=\"http://bpmn.io/schema/bpmn\" xsi:schemaLocation=\"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd\"><bpmn2:process id=\"Process_1\" isExecutable=\"true\"><bpmn2:startEvent id=\"StartEvent_1\" name=\"Principal Change Requested\"><bpmn2:outgoing>Flow_Start</bpmn2:outgoing></bpmn2:startEvent><bpmn2:serviceTask id=\"Activity_GetOtherHR\" name=\"Get HR Users in the Other Entity\"><bpmn2:incoming>Flow_Start</bpmn2:incoming><bpmn2:outgoing>Flow_GetOtherHR</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:serviceTask id=\"Activity_GetThisHR\" name=\"Get HR Users in this Entity\"><bpmn2:incoming>Flow_GetOtherHR</bpmn2:incoming><bpmn2:outgoing>Flow_GetThisHR</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:userTask id=\"Activity_AskApproval\" name=\"Approve a Principal Team Assignment Change\"><bpmn2:incoming>Flow_GetThisHR</bpmn2:incoming><bpmn2:outgoing>Flow_AskApproval</bpmn2:outgoing></bpmn2:userTask><bpmn2:exclusiveGateway id=\"Gateway_Approved\" name=\"Is Approved?\"><bpmn2:incoming>Flow_AskApproval</bpmn2:incoming><bpmn2:outgoing>Flow_Approved_Yes</bpmn2:outgoing><bpmn2:outgoing>Flow_Approved_No</bpmn2:outgoing></bpmn2:exclusiveGateway><bpmn2:serviceTask id=\"Activity_CheckOther\" name=\"Check the Other Principal Is Still Current\"><bpmn2:incoming>Flow_Approved_Yes</bpmn2:incoming><bpmn2:outgoing>Flow_CheckOther</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:serviceTask id=\"Activity_CheckThis\" name=\"Check this Assignment Is Still Current\"><bpmn2:incoming>Flow_CheckOther</bpmn2:incoming><bpmn2:outgoing>Flow_CheckThis</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:exclusiveGateway id=\"Gateway_Current\" name=\"Are Both Still Current?\"><bpmn2:incoming>Flow_CheckThis</bpmn2:incoming><bpmn2:outgoing>Flow_Current_Yes</bpmn2:outgoing><bpmn2:outgoing>Flow_Current_No</bpmn2:outgoing></bpmn2:exclusiveGateway><bpmn2:serviceTask id=\"Activity_EndOther\" name=\"End the Principal Assignment in the Other Entity\"><bpmn2:incoming>Flow_Current_Yes</bpmn2:incoming><bpmn2:outgoing>Flow_EndOther</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:serviceTask id=\"Activity_EndThis\" name=\"End this Assignment\"><bpmn2:incoming>Flow_EndOther</bpmn2:incoming><bpmn2:outgoing>Flow_EndThis</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:serviceTask id=\"Activity_InsertOther\" name=\"Create the Non-Principal Copy in the Other Entity\"><bpmn2:incoming>Flow_EndThis</bpmn2:incoming><bpmn2:outgoing>Flow_InsertOther</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:serviceTask id=\"Activity_InsertThis\" name=\"Create the Principal Copy in this Entity\"><bpmn2:incoming>Flow_InsertOther</bpmn2:incoming><bpmn2:outgoing>Flow_InsertThis</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:serviceTask id=\"Activity_SetApplied\" name=\"Mark the Request Applied\"><bpmn2:incoming>Flow_InsertThis</bpmn2:incoming><bpmn2:outgoing>Flow_SetApplied</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:userTask id=\"Activity_NotifyApplied\" name=\"Principal Change Applied\"><bpmn2:incoming>Flow_SetApplied</bpmn2:incoming><bpmn2:outgoing>Flow_NotifyApplied</bpmn2:outgoing></bpmn2:userTask><bpmn2:endEvent id=\"Event_End\" name=\"End\"><bpmn2:incoming>Flow_NotifyApplied</bpmn2:incoming><bpmn2:incoming>Flow_NotifyFailed</bpmn2:incoming><bpmn2:incoming>Flow_NotifyRejected</bpmn2:incoming><bpmn2:terminateEventDefinition id=\"TerminateEventDefinition_End\" /></bpmn2:endEvent><bpmn2:serviceTask id=\"Activity_SetFailed\" name=\"Mark the Request Failed\"><bpmn2:incoming>Flow_Current_No</bpmn2:incoming><bpmn2:outgoing>Flow_SetFailed</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:userTask id=\"Activity_NotifyFailed\" name=\"Principal Change Not Applied\"><bpmn2:incoming>Flow_SetFailed</bpmn2:incoming><bpmn2:outgoing>Flow_NotifyFailed</bpmn2:outgoing></bpmn2:userTask><bpmn2:serviceTask id=\"Activity_SetRejected\" name=\"Mark the Request Rejected\"><bpmn2:incoming>Flow_Approved_No</bpmn2:incoming><bpmn2:outgoing>Flow_SetRejected</bpmn2:outgoing></bpmn2:serviceTask><bpmn2:userTask id=\"Activity_NotifyRejected\" name=\"Principal Change Rejected\"><bpmn2:incoming>Flow_SetRejected</bpmn2:incoming><bpmn2:outgoing>Flow_NotifyRejected</bpmn2:outgoing></bpmn2:userTask><bpmn2:sequenceFlow id=\"Flow_Start\" sourceRef=\"StartEvent_1\" targetRef=\"Activity_GetOtherHR\" /><bpmn2:sequenceFlow id=\"Flow_GetOtherHR\" sourceRef=\"Activity_GetOtherHR\" targetRef=\"Activity_GetThisHR\" /><bpmn2:sequenceFlow id=\"Flow_GetThisHR\" sourceRef=\"Activity_GetThisHR\" targetRef=\"Activity_AskApproval\" /><bpmn2:sequenceFlow id=\"Flow_AskApproval\" sourceRef=\"Activity_AskApproval\" targetRef=\"Gateway_Approved\" /><bpmn2:sequenceFlow id=\"Flow_Approved_Yes\" name=\"Yes\" sourceRef=\"Gateway_Approved\" targetRef=\"Activity_CheckOther\" /><bpmn2:sequenceFlow id=\"Flow_Approved_No\" name=\"No\" sourceRef=\"Gateway_Approved\" targetRef=\"Activity_SetRejected\" /><bpmn2:sequenceFlow id=\"Flow_CheckOther\" sourceRef=\"Activity_CheckOther\" targetRef=\"Activity_CheckThis\" /><bpmn2:sequenceFlow id=\"Flow_CheckThis\" sourceRef=\"Activity_CheckThis\" targetRef=\"Gateway_Current\" /><bpmn2:sequenceFlow id=\"Flow_Current_Yes\" name=\"Yes\" sourceRef=\"Gateway_Current\" targetRef=\"Activity_EndOther\" /><bpmn2:sequenceFlow id=\"Flow_Current_No\" name=\"No\" sourceRef=\"Gateway_Current\" targetRef=\"Activity_SetFailed\" /><bpmn2:sequenceFlow id=\"Flow_EndOther\" sourceRef=\"Activity_EndOther\" targetRef=\"Activity_EndThis\" /><bpmn2:sequenceFlow id=\"Flow_EndThis\" sourceRef=\"Activity_EndThis\" targetRef=\"Activity_InsertOther\" /><bpmn2:sequenceFlow id=\"Flow_InsertOther\" sourceRef=\"Activity_InsertOther\" targetRef=\"Activity_InsertThis\" /><bpmn2:sequenceFlow id=\"Flow_InsertThis\" sourceRef=\"Activity_InsertThis\" targetRef=\"Activity_SetApplied\" /><bpmn2:sequenceFlow id=\"Flow_SetApplied\" sourceRef=\"Activity_SetApplied\" targetRef=\"Activity_NotifyApplied\" /><bpmn2:sequenceFlow id=\"Flow_NotifyApplied\" sourceRef=\"Activity_NotifyApplied\" targetRef=\"Event_End\" /><bpmn2:sequenceFlow id=\"Flow_SetFailed\" sourceRef=\"Activity_SetFailed\" targetRef=\"Activity_NotifyFailed\" /><bpmn2:sequenceFlow id=\"Flow_NotifyFailed\" sourceRef=\"Activity_NotifyFailed\" targetRef=\"Event_End\" /><bpmn2:sequenceFlow id=\"Flow_SetRejected\" sourceRef=\"Activity_SetRejected\" targetRef=\"Activity_NotifyRejected\" /><bpmn2:sequenceFlow id=\"Flow_NotifyRejected\" sourceRef=\"Activity_NotifyRejected\" targetRef=\"Event_End\" /></bpmn2:process><bpmndi:BPMNDiagram id=\"BPMNDiagram_1\"><bpmndi:BPMNPlane id=\"BPMNPlane_1\" bpmnElement=\"Process_1\"><bpmndi:BPMNShape id=\"StartEvent_1_di\" bpmnElement=\"StartEvent_1\"><dc:Bounds x=\"100\" y=\"100\" width=\"36\" height=\"36\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_GetOtherHR_di\" bpmnElement=\"Activity_GetOtherHR\"><dc:Bounds x=\"190\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_GetThisHR_di\" bpmnElement=\"Activity_GetThisHR\"><dc:Bounds x=\"340\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_AskApproval_di\" bpmnElement=\"Activity_AskApproval\"><dc:Bounds x=\"490\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Gateway_Approved_di\" bpmnElement=\"Gateway_Approved\" isMarkerVisible=\"true\"><dc:Bounds x=\"640\" y=\"93\" width=\"50\" height=\"50\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_CheckOther_di\" bpmnElement=\"Activity_CheckOther\"><dc:Bounds x=\"740\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_CheckThis_di\" bpmnElement=\"Activity_CheckThis\"><dc:Bounds x=\"890\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Gateway_Current_di\" bpmnElement=\"Gateway_Current\" isMarkerVisible=\"true\"><dc:Bounds x=\"1040\" y=\"93\" width=\"50\" height=\"50\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_EndOther_di\" bpmnElement=\"Activity_EndOther\"><dc:Bounds x=\"1140\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_EndThis_di\" bpmnElement=\"Activity_EndThis\"><dc:Bounds x=\"1290\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_InsertOther_di\" bpmnElement=\"Activity_InsertOther\"><dc:Bounds x=\"1440\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_InsertThis_di\" bpmnElement=\"Activity_InsertThis\"><dc:Bounds x=\"1590\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_SetApplied_di\" bpmnElement=\"Activity_SetApplied\"><dc:Bounds x=\"1740\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_NotifyApplied_di\" bpmnElement=\"Activity_NotifyApplied\"><dc:Bounds x=\"1890\" y=\"78\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Event_End_di\" bpmnElement=\"Event_End\"><dc:Bounds x=\"2040\" y=\"100\" width=\"36\" height=\"36\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_SetFailed_di\" bpmnElement=\"Activity_SetFailed\"><dc:Bounds x=\"1140\" y=\"230\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_NotifyFailed_di\" bpmnElement=\"Activity_NotifyFailed\"><dc:Bounds x=\"1290\" y=\"230\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_SetRejected_di\" bpmnElement=\"Activity_SetRejected\"><dc:Bounds x=\"740\" y=\"380\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNShape id=\"Activity_NotifyRejected_di\" bpmnElement=\"Activity_NotifyRejected\"><dc:Bounds x=\"890\" y=\"380\" width=\"100\" height=\"80\" /></bpmndi:BPMNShape><bpmndi:BPMNEdge id=\"Flow_Start_di\" bpmnElement=\"Flow_Start\"><di:waypoint x=\"136\" y=\"118\" /><di:waypoint x=\"190\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_GetOtherHR_di\" bpmnElement=\"Flow_GetOtherHR\"><di:waypoint x=\"290\" y=\"118\" /><di:waypoint x=\"340\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_GetThisHR_di\" bpmnElement=\"Flow_GetThisHR\"><di:waypoint x=\"440\" y=\"118\" /><di:waypoint x=\"490\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_AskApproval_di\" bpmnElement=\"Flow_AskApproval\"><di:waypoint x=\"590\" y=\"118\" /><di:waypoint x=\"640\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_Approved_Yes_di\" bpmnElement=\"Flow_Approved_Yes\"><di:waypoint x=\"690\" y=\"118\" /><di:waypoint x=\"740\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_Approved_No_di\" bpmnElement=\"Flow_Approved_No\"><di:waypoint x=\"665\" y=\"143\" /><di:waypoint x=\"665\" y=\"420\" /><di:waypoint x=\"740\" y=\"420\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_CheckOther_di\" bpmnElement=\"Flow_CheckOther\"><di:waypoint x=\"840\" y=\"118\" /><di:waypoint x=\"890\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_CheckThis_di\" bpmnElement=\"Flow_CheckThis\"><di:waypoint x=\"990\" y=\"118\" /><di:waypoint x=\"1040\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_Current_Yes_di\" bpmnElement=\"Flow_Current_Yes\"><di:waypoint x=\"1090\" y=\"118\" /><di:waypoint x=\"1140\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_Current_No_di\" bpmnElement=\"Flow_Current_No\"><di:waypoint x=\"1065\" y=\"143\" /><di:waypoint x=\"1065\" y=\"270\" /><di:waypoint x=\"1140\" y=\"270\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_EndOther_di\" bpmnElement=\"Flow_EndOther\"><di:waypoint x=\"1240\" y=\"118\" /><di:waypoint x=\"1290\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_EndThis_di\" bpmnElement=\"Flow_EndThis\"><di:waypoint x=\"1390\" y=\"118\" /><di:waypoint x=\"1440\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_InsertOther_di\" bpmnElement=\"Flow_InsertOther\"><di:waypoint x=\"1540\" y=\"118\" /><di:waypoint x=\"1590\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_InsertThis_di\" bpmnElement=\"Flow_InsertThis\"><di:waypoint x=\"1690\" y=\"118\" /><di:waypoint x=\"1740\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_SetApplied_di\" bpmnElement=\"Flow_SetApplied\"><di:waypoint x=\"1840\" y=\"118\" /><di:waypoint x=\"1890\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_NotifyApplied_di\" bpmnElement=\"Flow_NotifyApplied\"><di:waypoint x=\"1990\" y=\"118\" /><di:waypoint x=\"2040\" y=\"118\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_SetFailed_di\" bpmnElement=\"Flow_SetFailed\"><di:waypoint x=\"1240\" y=\"270\" /><di:waypoint x=\"1290\" y=\"270\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_NotifyFailed_di\" bpmnElement=\"Flow_NotifyFailed\"><di:waypoint x=\"1390\" y=\"270\" /><di:waypoint x=\"2058\" y=\"270\" /><di:waypoint x=\"2058\" y=\"136\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_SetRejected_di\" bpmnElement=\"Flow_SetRejected\"><di:waypoint x=\"840\" y=\"420\" /><di:waypoint x=\"890\" y=\"420\" /></bpmndi:BPMNEdge><bpmndi:BPMNEdge id=\"Flow_NotifyRejected_di\" bpmnElement=\"Flow_NotifyRejected\"><di:waypoint x=\"990\" y=\"420\" /><di:waypoint x=\"2058\" y=\"420\" /><di:waypoint x=\"2058\" y=\"136\" /></bpmndi:BPMNEdge></bpmndi:BPMNPlane></bpmndi:BPMNDiagram></bpmn2:definitions>",
+    "elementIDs": [
+     "db591f8e-5b7b-4161-b30e-4b2c63c60b76",
+     "e29c9cf7-477a-4a75-89df-7a33f90e7b2c",
+     "1ba09637-cddf-45ca-b20f-a2b80fa19c47",
+     "d0532cbb-dc7a-4e75-b80e-061f195f7389",
+     "ee0bc85c-4f57-4b1b-aa17-2f39278a4956",
+     "e0859e8a-2554-42e1-a709-ab71f85c7dfa",
+     "5be25481-c9c5-4eb0-97e3-e878c60e9be3",
+     "e6060a68-e0dd-4197-a04a-772384c9e56b",
+     "5e1ba615-d254-4af5-ae78-0af5c43a5de5",
+     "e356cf7b-6dab-4c18-add7-7b5526bfaf16",
+     "b87a72d9-618b-46f2-87ae-6f8b0eaee7e1",
+     "ff144557-809c-4f21-a960-b6337d1d562e",
+     "4228f3ea-38d8-4afc-a381-578197e7d337",
+     "10916272-62c7-4b69-9605-de48ccfc4c19",
+     "42419ee3-84a2-45ec-b2b4-3773f0c84a7a",
+     "837348a1-ff3f-4d4a-b167-02e51cb480f1",
+     "88235ff6-0ac2-464d-be2c-04b08539890c",
+     "e46e6a5d-0b60-482f-a2d6-1acc3554fb56",
+     "0aa7dc17-268b-465e-829b-d4f339d1fafb"
+    ],
+    "connections": {
+     "Flow_Start": {
+      "id": "Flow_Start",
+      "type": "bpmn:SequenceFlow",
+      "from": "StartEvent_1",
+      "to": "Activity_GetOtherHR"
+     },
+     "Flow_GetOtherHR": {
+      "id": "Flow_GetOtherHR",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_GetOtherHR",
+      "to": "Activity_GetThisHR"
+     },
+     "Flow_GetThisHR": {
+      "id": "Flow_GetThisHR",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_GetThisHR",
+      "to": "Activity_AskApproval"
+     },
+     "Flow_AskApproval": {
+      "id": "Flow_AskApproval",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_AskApproval",
+      "to": "Gateway_Approved"
+     },
+     "Flow_Approved_Yes": {
+      "id": "Flow_Approved_Yes",
+      "type": "bpmn:SequenceFlow",
+      "from": "Gateway_Approved",
+      "to": "Activity_CheckOther"
+     },
+     "Flow_Approved_No": {
+      "id": "Flow_Approved_No",
+      "type": "bpmn:SequenceFlow",
+      "from": "Gateway_Approved",
+      "to": "Activity_SetRejected"
+     },
+     "Flow_CheckOther": {
+      "id": "Flow_CheckOther",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_CheckOther",
+      "to": "Activity_CheckThis"
+     },
+     "Flow_CheckThis": {
+      "id": "Flow_CheckThis",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_CheckThis",
+      "to": "Gateway_Current"
+     },
+     "Flow_Current_Yes": {
+      "id": "Flow_Current_Yes",
+      "type": "bpmn:SequenceFlow",
+      "from": "Gateway_Current",
+      "to": "Activity_EndOther"
+     },
+     "Flow_Current_No": {
+      "id": "Flow_Current_No",
+      "type": "bpmn:SequenceFlow",
+      "from": "Gateway_Current",
+      "to": "Activity_SetFailed"
+     },
+     "Flow_EndOther": {
+      "id": "Flow_EndOther",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_EndOther",
+      "to": "Activity_EndThis"
+     },
+     "Flow_EndThis": {
+      "id": "Flow_EndThis",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_EndThis",
+      "to": "Activity_InsertOther"
+     },
+     "Flow_InsertOther": {
+      "id": "Flow_InsertOther",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_InsertOther",
+      "to": "Activity_InsertThis"
+     },
+     "Flow_InsertThis": {
+      "id": "Flow_InsertThis",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_InsertThis",
+      "to": "Activity_SetApplied"
+     },
+     "Flow_SetApplied": {
+      "id": "Flow_SetApplied",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_SetApplied",
+      "to": "Activity_NotifyApplied"
+     },
+     "Flow_NotifyApplied": {
+      "id": "Flow_NotifyApplied",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_NotifyApplied",
+      "to": "Event_End"
+     },
+     "Flow_SetFailed": {
+      "id": "Flow_SetFailed",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_SetFailed",
+      "to": "Activity_NotifyFailed"
+     },
+     "Flow_NotifyFailed": {
+      "id": "Flow_NotifyFailed",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_NotifyFailed",
+      "to": "Event_End"
+     },
+     "Flow_SetRejected": {
+      "id": "Flow_SetRejected",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_SetRejected",
+      "to": "Activity_NotifyRejected"
+     },
+     "Flow_NotifyRejected": {
+      "id": "Flow_NotifyRejected",
+      "type": "bpmn:SequenceFlow",
+      "from": "Activity_NotifyRejected",
+      "to": "Event_End"
+     }
+    }
+   }
+  },
+  {
+   "id": "db591f8e-5b7b-4161-b30e-4b2c63c60b76",
+   "type": "trigger",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Principal Change Requested"
+     }
+    ],
+    "id": "db591f8e-5b7b-4161-b30e-4b2c63c60b76",
+    "name": "Principal Change Requested",
+    "type": "trigger",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "StartEvent_1",
+    "laneDiagramID": "?laneID?",
+    "key": "TriggerLifecycle",
+    "triggerKey": "044cda33-b858-47d0-851b-a106f149a15f.added",
+    "objectID": "044cda33-b858-47d0-851b-a106f149a15f",
+    "lifecycleKey": "added"
+   }
+  },
+  {
+   "id": "e29c9cf7-477a-4a75-89df-7a33f90e7b2c",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Get HR Users in the Other Entity"
+     }
+    ],
+    "id": "e29c9cf7-477a-4a75-89df-7a33f90e7b2c",
+    "name": "Get HR Users in the Other Entity",
+    "type": "process.task.service.query",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_GetOtherHR",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "ce921800-6957-46a4-a0de-86a0e81cd759"
+     },
+     "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "89b067cd-dcc1-4886-ba8b-65f920062c70",
+          "rule": "context_equals",
+          "value": "StartEvent_1.dc833568-bc82-485d-a099-8c59934135cc"
+         }
+        ]
+       }
+      },
+      "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "156abc5f-354f-4481-a802-76e6370617d8"
+        },
+        "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+        "next": {
+         "key": "set_save",
+         "params": {
+          "task_param": "OtherEntityHRUsers"
+         },
+         "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+         "taskParam": "OtherEntityHRUsers"
+        },
+        "fieldID": "156abc5f-354f-4481-a802-76e6370617d8"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "1ba09637-cddf-45ca-b20f-a2b80fa19c47",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Get HR Users in this Entity"
+     }
+    ],
+    "id": "1ba09637-cddf-45ca-b20f-a2b80fa19c47",
+    "name": "Get HR Users in this Entity",
+    "type": "process.task.service.query",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_GetThisHR",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "ce921800-6957-46a4-a0de-86a0e81cd759"
+     },
+     "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "89b067cd-dcc1-4886-ba8b-65f920062c70",
+          "rule": "context_equals",
+          "value": "StartEvent_1.52ba81ca-d94c-482e-8b7a-fbf22768cabb"
+         }
+        ]
+       }
+      },
+      "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "156abc5f-354f-4481-a802-76e6370617d8"
+        },
+        "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+        "next": {
+         "key": "set_save",
+         "params": {
+          "task_param": "HRUsers"
+         },
+         "objectID": "ce921800-6957-46a4-a0de-86a0e81cd759",
+         "taskParam": "HRUsers"
+        },
+        "fieldID": "156abc5f-354f-4481-a802-76e6370617d8"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "d0532cbb-dc7a-4e75-b80e-061f195f7389",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Check the Other Principal Is Still Current"
+     }
+    ],
+    "id": "d0532cbb-dc7a-4e75-b80e-061f195f7389",
+    "name": "Check the Other Principal Is Still Current",
+    "type": "process.task.service.query",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_CheckOther",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+     },
+     "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d",
+          "rule": "context_equals",
+          "value": "StartEvent_1.3fa06cbb-09b4-4fa7-85e9-f1fd3abb3117"
+         },
+         {
+          "key": "079f04c9-7a93-494b-958c-246632f6de7f",
+          "rule": "checked",
+          "value": ""
+         },
+         {
+          "glue": "or",
+          "rules": [
+           {
+            "key": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+            "rule": "is_empty",
+            "value": ""
+           },
+           {
+            "key": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+            "rule": "greater_current",
+            "value": ""
+           }
+          ]
+         }
+        ]
+       }
+      },
+      "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "079f04c9-7a93-494b-958c-246632f6de7f"
+        },
+        "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+        "next": {
+         "key": "row_save",
+         "params": {
+          "task_param": "079f04c9-7a93-494b-958c-246632f6de7f"
+         },
+         "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+         "taskParam": "079f04c9-7a93-494b-958c-246632f6de7f"
+        },
+        "fieldID": "079f04c9-7a93-494b-958c-246632f6de7f"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "ee0bc85c-4f57-4b1b-aa17-2f39278a4956",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Check this Assignment Is Still Current"
+     }
+    ],
+    "id": "ee0bc85c-4f57-4b1b-aa17-2f39278a4956",
+    "name": "Check this Assignment Is Still Current",
+    "type": "process.task.service.query",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_CheckThis",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+     },
+     "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d",
+          "rule": "context_equals",
+          "value": "StartEvent_1.fa54e636-f6ce-485c-a8a0-b957d9c6fdc7"
+         },
+         {
+          "glue": "or",
+          "rules": [
+           {
+            "key": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+            "rule": "is_empty",
+            "value": ""
+           },
+           {
+            "key": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+            "rule": "greater_current",
+            "value": ""
+           }
+          ]
+         }
+        ]
+       }
+      },
+      "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+       "next": {
+        "key": "row_pluck",
+        "params": {
+         "fieldID": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d"
+        },
+        "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+        "next": {
+         "key": "row_save",
+         "params": {
+          "task_param": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d"
+         },
+         "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+         "taskParam": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d"
+        },
+        "fieldID": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "e0859e8a-2554-42e1-a709-ab71f85c7dfa",
+   "type": "process.task.user.approval",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Approve a Principal Team Assignment Change"
+     }
+    ],
+    "id": "e0859e8a-2554-42e1-a709-ab71f85c7dfa",
+    "name": "Approve a Principal Team Assignment Change",
+    "type": "process.task.user.approval",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_AskApproval",
+    "laneDiagramID": "?laneID?",
+    "key": "Approval",
+    "who": "1",
+    "toUsers": {
+     "useRole": 0,
+     "role": null,
+     "useAccount": 0,
+     "account": null,
+     "useField": 1,
+     "userFields": [
+      "e29c9cf7-477a-4a75-89df-7a33f90e7b2c.OtherEntityHRUsers"
+     ],
+     "filterConditions": {
+      "glue": "and",
+      "rules": []
+     }
+    },
+    "formBuilder": {
+     "components": [
+      {
+       "type": "content",
+       "label": "Content",
+       "key": "cpc1",
+       "html": "<p><b>HR in another entity asks to make this person principal there.</b> This person is principal in your entity now. If you approve, their principal assignment in your entity ends today and a non-principal copy of it starts today. If you reject, nothing changes.</p>",
+       "input": false,
+       "tableView": false,
+       "id": "cpc2"
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Request",
+       "input": false,
+       "tableView": false,
+       "key": "cpc5",
+       "id": "cpc6",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Requested By",
+         "key": "StartEvent_1.14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+         "abFieldID": "14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc3"
+        },
+        {
+         "type": "textarea",
+         "label": "Reason",
+         "key": "StartEvent_1.0f230605-b619-444b-bb69-c16c3f684016",
+         "abFieldID": "0f230605-b619-444b-bb69-c16c3f684016",
+         "disabled": true,
+         "input": true,
+         "rows": 3,
+         "autoExpand": true,
+         "tableView": true,
+         "id": "cpc4"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Person",
+       "input": false,
+       "tableView": false,
+       "key": "cpc10",
+       "id": "cpc11",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "First Name",
+         "key": "StartEvent_1.73b91fa3-c554-40fe-9411-6017f8698f32",
+         "abFieldID": "73b91fa3-c554-40fe-9411-6017f8698f32",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc7"
+        },
+        {
+         "type": "textfield",
+         "label": "Last Name",
+         "key": "StartEvent_1.46a07a2a-4b5b-4354-9b16-4a529102a553",
+         "abFieldID": "46a07a2a-4b5b-4354-9b16-4a529102a553",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc8"
+        },
+        {
+         "type": "textfield",
+         "label": "Email",
+         "key": "StartEvent_1.385fe9d1-543e-45db-b673-8f0a0d2daf68",
+         "abFieldID": "385fe9d1-543e-45db-b673-8f0a0d2daf68",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc9"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Principal from now on, if you approve",
+       "input": false,
+       "tableView": false,
+       "key": "cpc15",
+       "id": "cpc16",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Entity",
+         "key": "StartEvent_1.683be5fb-2de4-4480-a184-19577f202ea3",
+         "abFieldID": "683be5fb-2de4-4480-a184-19577f202ea3",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc12"
+        },
+        {
+         "type": "textfield",
+         "label": "Team",
+         "key": "StartEvent_1.022ba1ea-6a33-479c-9e83-48803c166eb4",
+         "abFieldID": "022ba1ea-6a33-479c-9e83-48803c166eb4",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc13"
+        },
+        {
+         "type": "textfield",
+         "label": "Job Title",
+         "key": "StartEvent_1.2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+         "abFieldID": "2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc14"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Principal now, ends today if you approve",
+       "input": false,
+       "tableView": false,
+       "key": "cpc20",
+       "id": "cpc21",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Entity",
+         "key": "StartEvent_1.0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+         "abFieldID": "0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc17"
+        },
+        {
+         "type": "textfield",
+         "label": "Team",
+         "key": "StartEvent_1.9ce54723-397a-4006-ab64-f138fb9441d3",
+         "abFieldID": "9ce54723-397a-4006-ab64-f138fb9441d3",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc18"
+        },
+        {
+         "type": "textfield",
+         "label": "Job Title",
+         "key": "StartEvent_1.6a7942bc-4b11-43dd-80c7-96400e91cd73",
+         "abFieldID": "6a7942bc-4b11-43dd-80c7-96400e91cd73",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc19"
+        }
+       ]
+      },
+      {
+       "type": "button",
+       "label": "Approve",
+       "key": "submit",
+       "action": "event",
+       "event": "approve",
+       "theme": "success",
+       "input": true,
+       "size": "md",
+       "block": false,
+       "disableOnInvalid": false,
+       "tableView": false,
+       "id": "cpc22"
+      },
+      {
+       "type": "button",
+       "label": "Reject",
+       "key": "submit1",
+       "action": "event",
+       "event": "reject",
+       "theme": "danger",
+       "input": true,
+       "size": "md",
+       "block": false,
+       "disableOnInvalid": false,
+       "tableView": false,
+       "id": "cpc23"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "5be25481-c9c5-4eb0-97e3-e878c60e9be3",
+   "type": "process.gateway.exclusive",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Is Approved?"
+     }
+    ],
+    "id": "5be25481-c9c5-4eb0-97e3-e878c60e9be3",
+    "name": "Is Approved?",
+    "type": "process.gateway.exclusive",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Gateway_Approved",
+    "laneDiagramID": "?laneID?",
+    "key": "GatewayExclusive",
+    "conditions": {
+     "Flow_Approved_Yes": {
+      "label": "Yes",
+      "filterValue": {
+       "glue": "and",
+       "rules": [
+        {
+         "key": "Activity_AskApproval.userFormResponse",
+         "rule": "equals",
+         "value": "approve"
+        }
+       ]
+      }
+     },
+     "Flow_Approved_No": {
+      "label": "No",
+      "filterValue": {
+       "glue": "and",
+       "rules": [
+        {
+         "key": "Activity_AskApproval.userFormResponse",
+         "rule": "equals",
+         "value": "reject"
+        }
+       ]
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "e6060a68-e0dd-4197-a04a-772384c9e56b",
+   "type": "process.gateway.exclusive",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Are Both Still Current?"
+     }
+    ],
+    "id": "e6060a68-e0dd-4197-a04a-772384c9e56b",
+    "name": "Are Both Still Current?",
+    "type": "process.gateway.exclusive",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Gateway_Current",
+    "laneDiagramID": "?laneID?",
+    "key": "GatewayExclusive",
+    "conditions": {
+     "Flow_Current_Yes": {
+      "label": "Yes",
+      "filterValue": {
+       "glue": "and",
+       "rules": [
+        {
+         "key": "079f04c9-7a93-494b-958c-246632f6de7f",
+         "rule": "checked",
+         "value": ""
+        },
+        {
+         "key": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d",
+         "rule": "is_not_empty",
+         "value": ""
+        }
+       ]
+      }
+     },
+     "Flow_Current_No": {
+      "label": "No",
+      "filterValue": {
+       "glue": "or",
+       "rules": [
+        {
+         "key": "079f04c9-7a93-494b-958c-246632f6de7f",
+         "rule": "unchecked",
+         "value": ""
+        },
+        {
+         "key": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d",
+         "rule": "is_empty",
+         "value": ""
+        }
+       ]
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "5e1ba615-d254-4af5-ae78-0af5c43a5de5",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "End the Principal Assignment in the Other Entity"
+     }
+    ],
+    "id": "5e1ba615-d254-4af5-ae78-0af5c43a5de5",
+    "name": "End the Principal Assignment in the Other Entity",
+    "type": "process.task.service.query",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_EndOther",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+     },
+     "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d",
+          "rule": "context_equals",
+          "value": "StartEvent_1.3fa06cbb-09b4-4fa7-85e9-f1fd3abb3117"
+         }
+        ]
+       }
+      },
+      "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+       "next": {
+        "key": "update",
+        "params": {
+         "values": [
+          {
+           "fieldId": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+           "value": "ab-current-date"
+          }
+         ]
+        },
+        "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "e356cf7b-6dab-4c18-add7-7b5526bfaf16",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "End this Assignment"
+     }
+    ],
+    "id": "e356cf7b-6dab-4c18-add7-7b5526bfaf16",
+    "name": "End this Assignment",
+    "type": "process.task.service.query",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_EndThis",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+     },
+     "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "99c2b2ec-3f0d-4d53-90f2-1bd75a87b99d",
+          "rule": "context_equals",
+          "value": "StartEvent_1.fa54e636-f6ce-485c-a8a0-b957d9c6fdc7"
+         }
+        ]
+       }
+      },
+      "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+       "next": {
+        "key": "update",
+        "params": {
+         "values": [
+          {
+           "fieldId": "bc444eba-534d-4bb7-856e-2a1dabce78ef",
+           "value": "ab-current-date"
+          }
+         ]
+        },
+        "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "b87a72d9-618b-46f2-87ae-6f8b0eaee7e1",
+   "type": "process.task.service.insertRecord",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Create the Non-Principal Copy in the Other Entity"
+     }
+    ],
+    "id": "b87a72d9-618b-46f2-87ae-6f8b0eaee7e1",
+    "name": "Create the Non-Principal Copy in the Other Entity",
+    "type": "process.task.service.insertRecord",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_InsertOther",
+    "laneDiagramID": "?laneID?",
+    "key": "InsertRecord",
+    "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+    "fieldValues": {
+     "5546868c-bdb9-4e30-b8fc-cc2b3a886eb2": {
+      "set": "2",
+      "value": "6a7942bc-4b11-43dd-80c7-96400e91cd73"
+     },
+     "cdfdd0e3-6395-43f1-a6b3-47ff535ed1df": {
+      "set": "2",
+      "value": "f3a25578-d38f-44ad-ba92-3de74442a92a"
+     },
+     "a6b6489b-45c2-4b74-93d4-9f9609678efb": {
+      "set": "2",
+      "value": "f7c76efa-8128-4576-a0ee-06d7ea436cae"
+     },
+     "aa577b4b-4cbc-4228-801e-ea026c6c04f7": {
+      "set": "2",
+      "value": "dc833568-bc82-485d-a099-8c59934135cc"
+     },
+     "e6259996-6396-4000-ac76-572df371bd25": {
+      "set": "2",
+      "value": "d3ca7223-9103-43c0-8d45-ce5b6d1a8f0b"
+     },
+     "73228c17-5f24-42ca-b34d-94c8d274755a": {
+      "set": "2",
+      "value": "c022171a-810a-4667-8d8c-d3d8c8480433"
+     },
+     "f04c6040-179d-465f-bb90-bd850b060dfe": {
+      "set": "1",
+      "value": "ab-current-date"
+     },
+     "079f04c9-7a93-494b-958c-246632f6de7f": {
+      "set": "1",
+      "value": "0"
+     },
+     "0725fdaa-aa20-42f9-bb47-e63eae65f00c": {
+      "set": "2",
+      "value": "14ff7752-6882-44e8-ab8c-99dd470f1b1b"
+     }
+    },
+    "isRepeat": false,
+    "repeatMode": "",
+    "repeatColumn": ""
+   }
+  },
+  {
+   "id": "ff144557-809c-4f21-a960-b6337d1d562e",
+   "type": "process.task.service.insertRecord",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Create the Principal Copy in this Entity"
+     }
+    ],
+    "id": "ff144557-809c-4f21-a960-b6337d1d562e",
+    "name": "Create the Principal Copy in this Entity",
+    "type": "process.task.service.insertRecord",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_InsertThis",
+    "laneDiagramID": "?laneID?",
+    "key": "InsertRecord",
+    "objectID": "6be3870c-ea6f-463a-b95e-80c5fe936bac",
+    "fieldValues": {
+     "5546868c-bdb9-4e30-b8fc-cc2b3a886eb2": {
+      "set": "2",
+      "value": "2f1b6c97-58f2-45ff-8bba-1cf753d4676e"
+     },
+     "cdfdd0e3-6395-43f1-a6b3-47ff535ed1df": {
+      "set": "2",
+      "value": "76d2f107-4e25-4922-813a-eb7ea9a6a61b"
+     },
+     "a6b6489b-45c2-4b74-93d4-9f9609678efb": {
+      "set": "2",
+      "value": "15775e03-3e3d-4c78-8d13-58b5f7ce6f4c"
+     },
+     "aa577b4b-4cbc-4228-801e-ea026c6c04f7": {
+      "set": "2",
+      "value": "52ba81ca-d94c-482e-8b7a-fbf22768cabb"
+     },
+     "e6259996-6396-4000-ac76-572df371bd25": {
+      "set": "2",
+      "value": "d66f1a46-61e4-464c-90dd-d0a5e81a80b9"
+     },
+     "73228c17-5f24-42ca-b34d-94c8d274755a": {
+      "set": "2",
+      "value": "cc79a6d7-33df-49c8-a296-813b1f13d310"
+     },
+     "f04c6040-179d-465f-bb90-bd850b060dfe": {
+      "set": "1",
+      "value": "ab-current-date"
+     },
+     "079f04c9-7a93-494b-958c-246632f6de7f": {
+      "set": "1",
+      "value": "1"
+     },
+     "0725fdaa-aa20-42f9-bb47-e63eae65f00c": {
+      "set": "2",
+      "value": "14ff7752-6882-44e8-ab8c-99dd470f1b1b"
+     }
+    },
+    "isRepeat": false,
+    "repeatMode": "",
+    "repeatColumn": ""
+   }
+  },
+  {
+   "id": "4228f3ea-38d8-4afc-a381-578197e7d337",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Mark the Request Applied"
+     }
+    ],
+    "id": "4228f3ea-38d8-4afc-a381-578197e7d337",
+    "name": "Mark the Request Applied",
+    "type": "process.task.service.query",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_SetApplied",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "044cda33-b858-47d0-851b-a106f149a15f"
+     },
+     "objectID": "044cda33-b858-47d0-851b-a106f149a15f",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "this_object",
+          "rule": "context_equals",
+          "value": "StartEvent_1.uuid"
+         }
+        ]
+       }
+      },
+      "objectID": "044cda33-b858-47d0-851b-a106f149a15f",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "044cda33-b858-47d0-851b-a106f149a15f",
+       "next": {
+        "key": "update",
+        "params": {
+         "values": [
+          {
+           "fieldId": "fa21da21-3c56-48f3-a610-4a73790fdb1b",
+           "value": "applied"
+          }
+         ]
+        },
+        "objectID": "044cda33-b858-47d0-851b-a106f149a15f"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "10916272-62c7-4b69-9605-de48ccfc4c19",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Mark the Request Failed"
+     }
+    ],
+    "id": "10916272-62c7-4b69-9605-de48ccfc4c19",
+    "name": "Mark the Request Failed",
+    "type": "process.task.service.query",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_SetFailed",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "044cda33-b858-47d0-851b-a106f149a15f"
+     },
+     "objectID": "044cda33-b858-47d0-851b-a106f149a15f",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "this_object",
+          "rule": "context_equals",
+          "value": "StartEvent_1.uuid"
+         }
+        ]
+       }
+      },
+      "objectID": "044cda33-b858-47d0-851b-a106f149a15f",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "044cda33-b858-47d0-851b-a106f149a15f",
+       "next": {
+        "key": "update",
+        "params": {
+         "values": [
+          {
+           "fieldId": "fa21da21-3c56-48f3-a610-4a73790fdb1b",
+           "value": "failed"
+          }
+         ]
+        },
+        "objectID": "044cda33-b858-47d0-851b-a106f149a15f"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "42419ee3-84a2-45ec-b2b4-3773f0c84a7a",
+   "type": "process.task.service.query",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Mark the Request Rejected"
+     }
+    ],
+    "id": "42419ee3-84a2-45ec-b2b4-3773f0c84a7a",
+    "name": "Mark the Request Rejected",
+    "type": "process.task.service.query",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_SetRejected",
+    "laneDiagramID": "?laneID?",
+    "key": "TaskServiceQuery",
+    "qlObj": {
+     "key": "object",
+     "params": {
+      "name": "044cda33-b858-47d0-851b-a106f149a15f"
+     },
+     "objectID": "044cda33-b858-47d0-851b-a106f149a15f",
+     "next": {
+      "key": "find",
+      "params": {
+       "cond": {
+        "glue": "and",
+        "rules": [
+         {
+          "key": "this_object",
+          "rule": "context_equals",
+          "value": "StartEvent_1.uuid"
+         }
+        ]
+       }
+      },
+      "objectID": "044cda33-b858-47d0-851b-a106f149a15f",
+      "next": {
+       "key": "first",
+       "params": {},
+       "objectID": "044cda33-b858-47d0-851b-a106f149a15f",
+       "next": {
+        "key": "update",
+        "params": {
+         "values": [
+          {
+           "fieldId": "fa21da21-3c56-48f3-a610-4a73790fdb1b",
+           "value": "rejected"
+          }
+         ]
+        },
+        "objectID": "044cda33-b858-47d0-851b-a106f149a15f"
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "id": "837348a1-ff3f-4d4a-b167-02e51cb480f1",
+   "type": "process.task.user.approval",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Principal Change Applied"
+     }
+    ],
+    "id": "837348a1-ff3f-4d4a-b167-02e51cb480f1",
+    "name": "Principal Change Applied",
+    "type": "process.task.user.approval",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_NotifyApplied",
+    "laneDiagramID": "?laneID?",
+    "key": "Approval",
+    "who": "1",
+    "toUsers": {
+     "useRole": 0,
+     "role": null,
+     "useAccount": 0,
+     "account": null,
+     "useField": 1,
+     "userFields": [
+      "1ba09637-cddf-45ca-b20f-a2b80fa19c47.HRUsers",
+      "e29c9cf7-477a-4a75-89df-7a33f90e7b2c.OtherEntityHRUsers"
+     ],
+     "filterConditions": {
+      "glue": "and",
+      "rules": []
+     }
+    },
+    "formBuilder": {
+     "components": [
+      {
+       "type": "content",
+       "label": "Content",
+       "key": "cpc24",
+       "html": "<p><b>The principal team assignment was moved.</b> The old principal assignment ended today and the new one starts today.</p>",
+       "input": false,
+       "tableView": false,
+       "id": "cpc25"
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Person",
+       "input": false,
+       "tableView": false,
+       "key": "cpc29",
+       "id": "cpc30",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "First Name",
+         "key": "StartEvent_1.73b91fa3-c554-40fe-9411-6017f8698f32",
+         "abFieldID": "73b91fa3-c554-40fe-9411-6017f8698f32",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc26"
+        },
+        {
+         "type": "textfield",
+         "label": "Last Name",
+         "key": "StartEvent_1.46a07a2a-4b5b-4354-9b16-4a529102a553",
+         "abFieldID": "46a07a2a-4b5b-4354-9b16-4a529102a553",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc27"
+        },
+        {
+         "type": "textfield",
+         "label": "Email",
+         "key": "StartEvent_1.385fe9d1-543e-45db-b673-8f0a0d2daf68",
+         "abFieldID": "385fe9d1-543e-45db-b673-8f0a0d2daf68",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc28"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "New principal",
+       "input": false,
+       "tableView": false,
+       "key": "cpc34",
+       "id": "cpc35",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Entity",
+         "key": "StartEvent_1.683be5fb-2de4-4480-a184-19577f202ea3",
+         "abFieldID": "683be5fb-2de4-4480-a184-19577f202ea3",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc31"
+        },
+        {
+         "type": "textfield",
+         "label": "Team",
+         "key": "StartEvent_1.022ba1ea-6a33-479c-9e83-48803c166eb4",
+         "abFieldID": "022ba1ea-6a33-479c-9e83-48803c166eb4",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc32"
+        },
+        {
+         "type": "textfield",
+         "label": "Job Title",
+         "key": "StartEvent_1.2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+         "abFieldID": "2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc33"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Previous principal",
+       "input": false,
+       "tableView": false,
+       "key": "cpc39",
+       "id": "cpc40",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Entity",
+         "key": "StartEvent_1.0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+         "abFieldID": "0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc36"
+        },
+        {
+         "type": "textfield",
+         "label": "Team",
+         "key": "StartEvent_1.9ce54723-397a-4006-ab64-f138fb9441d3",
+         "abFieldID": "9ce54723-397a-4006-ab64-f138fb9441d3",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc37"
+        },
+        {
+         "type": "textfield",
+         "label": "Job Title",
+         "key": "StartEvent_1.6a7942bc-4b11-43dd-80c7-96400e91cd73",
+         "abFieldID": "6a7942bc-4b11-43dd-80c7-96400e91cd73",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc38"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Request",
+       "input": false,
+       "tableView": false,
+       "key": "cpc43",
+       "id": "cpc44",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Requested By",
+         "key": "StartEvent_1.14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+         "abFieldID": "14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc41"
+        },
+        {
+         "type": "textarea",
+         "label": "Reason",
+         "key": "StartEvent_1.0f230605-b619-444b-bb69-c16c3f684016",
+         "abFieldID": "0f230605-b619-444b-bb69-c16c3f684016",
+         "disabled": true,
+         "input": true,
+         "rows": 3,
+         "autoExpand": true,
+         "tableView": true,
+         "id": "cpc42"
+        }
+       ]
+      },
+      {
+       "type": "button",
+       "label": "Close",
+       "key": "submit",
+       "action": "event",
+       "event": "approve",
+       "theme": "primary",
+       "input": true,
+       "size": "md",
+       "block": false,
+       "disableOnInvalid": false,
+       "tableView": false,
+       "id": "cpc45"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "88235ff6-0ac2-464d-be2c-04b08539890c",
+   "type": "process.task.user.approval",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Principal Change Not Applied"
+     }
+    ],
+    "id": "88235ff6-0ac2-464d-be2c-04b08539890c",
+    "name": "Principal Change Not Applied",
+    "type": "process.task.user.approval",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_NotifyFailed",
+    "laneDiagramID": "?laneID?",
+    "key": "Approval",
+    "who": "1",
+    "toUsers": {
+     "useRole": 0,
+     "role": null,
+     "useAccount": 0,
+     "account": null,
+     "useField": 1,
+     "userFields": [
+      "1ba09637-cddf-45ca-b20f-a2b80fa19c47.HRUsers",
+      "e29c9cf7-477a-4a75-89df-7a33f90e7b2c.OtherEntityHRUsers"
+     ],
+     "filterConditions": {
+      "glue": "and",
+      "rules": []
+     }
+    },
+    "formBuilder": {
+     "components": [
+      {
+       "type": "content",
+       "label": "Content",
+       "key": "cpc46",
+       "html": "<p><b>Nothing was changed.</b> The change was approved, but before it could be saved the principal assignment in the other entity, or this assignment, had already changed. Please check the team chart and ask again if needed.</p>",
+       "input": false,
+       "tableView": false,
+       "id": "cpc47"
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Person",
+       "input": false,
+       "tableView": false,
+       "key": "cpc51",
+       "id": "cpc52",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "First Name",
+         "key": "StartEvent_1.73b91fa3-c554-40fe-9411-6017f8698f32",
+         "abFieldID": "73b91fa3-c554-40fe-9411-6017f8698f32",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc48"
+        },
+        {
+         "type": "textfield",
+         "label": "Last Name",
+         "key": "StartEvent_1.46a07a2a-4b5b-4354-9b16-4a529102a553",
+         "abFieldID": "46a07a2a-4b5b-4354-9b16-4a529102a553",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc49"
+        },
+        {
+         "type": "textfield",
+         "label": "Email",
+         "key": "StartEvent_1.385fe9d1-543e-45db-b673-8f0a0d2daf68",
+         "abFieldID": "385fe9d1-543e-45db-b673-8f0a0d2daf68",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc50"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Asked to be principal",
+       "input": false,
+       "tableView": false,
+       "key": "cpc56",
+       "id": "cpc57",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Entity",
+         "key": "StartEvent_1.683be5fb-2de4-4480-a184-19577f202ea3",
+         "abFieldID": "683be5fb-2de4-4480-a184-19577f202ea3",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc53"
+        },
+        {
+         "type": "textfield",
+         "label": "Team",
+         "key": "StartEvent_1.022ba1ea-6a33-479c-9e83-48803c166eb4",
+         "abFieldID": "022ba1ea-6a33-479c-9e83-48803c166eb4",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc54"
+        },
+        {
+         "type": "textfield",
+         "label": "Job Title",
+         "key": "StartEvent_1.2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+         "abFieldID": "2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc55"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Principal when it was asked",
+       "input": false,
+       "tableView": false,
+       "key": "cpc61",
+       "id": "cpc62",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Entity",
+         "key": "StartEvent_1.0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+         "abFieldID": "0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc58"
+        },
+        {
+         "type": "textfield",
+         "label": "Team",
+         "key": "StartEvent_1.9ce54723-397a-4006-ab64-f138fb9441d3",
+         "abFieldID": "9ce54723-397a-4006-ab64-f138fb9441d3",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc59"
+        },
+        {
+         "type": "textfield",
+         "label": "Job Title",
+         "key": "StartEvent_1.6a7942bc-4b11-43dd-80c7-96400e91cd73",
+         "abFieldID": "6a7942bc-4b11-43dd-80c7-96400e91cd73",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc60"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Request",
+       "input": false,
+       "tableView": false,
+       "key": "cpc65",
+       "id": "cpc66",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Requested By",
+         "key": "StartEvent_1.14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+         "abFieldID": "14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc63"
+        },
+        {
+         "type": "textarea",
+         "label": "Reason",
+         "key": "StartEvent_1.0f230605-b619-444b-bb69-c16c3f684016",
+         "abFieldID": "0f230605-b619-444b-bb69-c16c3f684016",
+         "disabled": true,
+         "input": true,
+         "rows": 3,
+         "autoExpand": true,
+         "tableView": true,
+         "id": "cpc64"
+        }
+       ]
+      },
+      {
+       "type": "button",
+       "label": "Close",
+       "key": "submit",
+       "action": "event",
+       "event": "approve",
+       "theme": "primary",
+       "input": true,
+       "size": "md",
+       "block": false,
+       "disableOnInvalid": false,
+       "tableView": false,
+       "id": "cpc67"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "e46e6a5d-0b60-482f-a2d6-1acc3554fb56",
+   "type": "process.task.user.approval",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Principal Change Rejected"
+     }
+    ],
+    "id": "e46e6a5d-0b60-482f-a2d6-1acc3554fb56",
+    "name": "Principal Change Rejected",
+    "type": "process.task.user.approval",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Activity_NotifyRejected",
+    "laneDiagramID": "?laneID?",
+    "key": "Approval",
+    "who": "1",
+    "toUsers": {
+     "useRole": 0,
+     "role": null,
+     "useAccount": 0,
+     "account": null,
+     "useField": 1,
+     "userFields": [
+      "1ba09637-cddf-45ca-b20f-a2b80fa19c47.HRUsers"
+     ],
+     "filterConditions": {
+      "glue": "and",
+      "rules": []
+     }
+    },
+    "formBuilder": {
+     "components": [
+      {
+       "type": "content",
+       "label": "Content",
+       "key": "cpc68",
+       "html": "<p><b>The HR of the other entity rejected this principal change.</b> Nothing was changed.</p>",
+       "input": false,
+       "tableView": false,
+       "id": "cpc69"
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Person",
+       "input": false,
+       "tableView": false,
+       "key": "cpc73",
+       "id": "cpc74",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "First Name",
+         "key": "StartEvent_1.73b91fa3-c554-40fe-9411-6017f8698f32",
+         "abFieldID": "73b91fa3-c554-40fe-9411-6017f8698f32",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc70"
+        },
+        {
+         "type": "textfield",
+         "label": "Last Name",
+         "key": "StartEvent_1.46a07a2a-4b5b-4354-9b16-4a529102a553",
+         "abFieldID": "46a07a2a-4b5b-4354-9b16-4a529102a553",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc71"
+        },
+        {
+         "type": "textfield",
+         "label": "Email",
+         "key": "StartEvent_1.385fe9d1-543e-45db-b673-8f0a0d2daf68",
+         "abFieldID": "385fe9d1-543e-45db-b673-8f0a0d2daf68",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc72"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Asked to be principal",
+       "input": false,
+       "tableView": false,
+       "key": "cpc78",
+       "id": "cpc79",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Entity",
+         "key": "StartEvent_1.683be5fb-2de4-4480-a184-19577f202ea3",
+         "abFieldID": "683be5fb-2de4-4480-a184-19577f202ea3",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc75"
+        },
+        {
+         "type": "textfield",
+         "label": "Team",
+         "key": "StartEvent_1.022ba1ea-6a33-479c-9e83-48803c166eb4",
+         "abFieldID": "022ba1ea-6a33-479c-9e83-48803c166eb4",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc76"
+        },
+        {
+         "type": "textfield",
+         "label": "Job Title",
+         "key": "StartEvent_1.2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+         "abFieldID": "2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc77"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Principal now",
+       "input": false,
+       "tableView": false,
+       "key": "cpc83",
+       "id": "cpc84",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Entity",
+         "key": "StartEvent_1.0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+         "abFieldID": "0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc80"
+        },
+        {
+         "type": "textfield",
+         "label": "Team",
+         "key": "StartEvent_1.9ce54723-397a-4006-ab64-f138fb9441d3",
+         "abFieldID": "9ce54723-397a-4006-ab64-f138fb9441d3",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc81"
+        },
+        {
+         "type": "textfield",
+         "label": "Job Title",
+         "key": "StartEvent_1.6a7942bc-4b11-43dd-80c7-96400e91cd73",
+         "abFieldID": "6a7942bc-4b11-43dd-80c7-96400e91cd73",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc82"
+        }
+       ]
+      },
+      {
+       "type": "fieldset",
+       "label": "Field Set",
+       "legend": "Request",
+       "input": false,
+       "tableView": false,
+       "key": "cpc87",
+       "id": "cpc88",
+       "components": [
+        {
+         "type": "textfield",
+         "label": "Requested By",
+         "key": "StartEvent_1.14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+         "abFieldID": "14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+         "disabled": true,
+         "input": true,
+         "tableView": true,
+         "id": "cpc85"
+        },
+        {
+         "type": "textarea",
+         "label": "Reason",
+         "key": "StartEvent_1.0f230605-b619-444b-bb69-c16c3f684016",
+         "abFieldID": "0f230605-b619-444b-bb69-c16c3f684016",
+         "disabled": true,
+         "input": true,
+         "rows": 3,
+         "autoExpand": true,
+         "tableView": true,
+         "id": "cpc86"
+        }
+       ]
+      },
+      {
+       "type": "button",
+       "label": "Close",
+       "key": "submit",
+       "action": "event",
+       "event": "approve",
+       "theme": "primary",
+       "input": true,
+       "size": "md",
+       "block": false,
+       "disableOnInvalid": false,
+       "tableView": false,
+       "id": "cpc89"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "0aa7dc17-268b-465e-829b-d4f339d1fafb",
+   "type": "process.task.end",
+   "updatedAt": "2026-10-03 17:26:25",
+   "json": {
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "End"
+     }
+    ],
+    "id": "0aa7dc17-268b-465e-829b-d4f339d1fafb",
+    "name": "End",
+    "type": "process.task.end",
+    "processID": "0d8b7f1a-b561-407d-a768-29f955ea387a",
+    "diagramID": "Event_End",
+    "laneDiagramID": "?laneID?",
+    "key": "End"
+   }
+  }
+ ]
+}

@@ -1,0 +1,715 @@
+{
+ "note": "cache-principal-change (044cda33-b858-47d0-851b-a106f149a15f) in the local admin tenant, read from appbuilder_definition on 2026-10-04 before the expires_on field was added. One object row and its 24 fields.",
+ "definitions": [
+  {
+   "id": "044cda33-b858-47d0-851b-a106f149a15f",
+   "type": "object",
+   "updatedAt": "2026-10-03 14:45:33",
+   "json": {
+    "id": "044cda33-b858-47d0-851b-a106f149a15f",
+    "type": "object",
+    "name": "cache-principal-change",
+    "labelFormat": "",
+    "labelSettings": {
+     "isNoLabelDisplay": 0
+    },
+    "isImported": 0,
+    "isExternal": 0,
+    "tableName": "AB_NetSuiteHRUpdate_cacheprincipalchange",
+    "primaryColumnName": "uuid",
+    "transColumnName": "",
+    "urlPath": "",
+    "objectWorkspace": {
+     "sortFields": [],
+     "filterConditions": [],
+     "frozenColumnID": "",
+     "hiddenFields": []
+    },
+    "isSystemObject": false,
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "cache-principal-change"
+     }
+    ],
+    "fieldIDs": [
+     "fa21da21-3c56-48f3-a610-4a73790fdb1b",
+     "0f230605-b619-444b-bb69-c16c3f684016",
+     "14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+     "fa54e636-f6ce-485c-a8a0-b957d9c6fdc7",
+     "15775e03-3e3d-4c78-8d13-58b5f7ce6f4c",
+     "385fe9d1-543e-45db-b673-8f0a0d2daf68",
+     "73b91fa3-c554-40fe-9411-6017f8698f32",
+     "46a07a2a-4b5b-4354-9b16-4a529102a553",
+     "52ba81ca-d94c-482e-8b7a-fbf22768cabb",
+     "683be5fb-2de4-4480-a184-19577f202ea3",
+     "d66f1a46-61e4-464c-90dd-d0a5e81a80b9",
+     "022ba1ea-6a33-479c-9e83-48803c166eb4",
+     "cc79a6d7-33df-49c8-a296-813b1f13d310",
+     "2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+     "76d2f107-4e25-4922-813a-eb7ea9a6a61b",
+     "3fa06cbb-09b4-4fa7-85e9-f1fd3abb3117",
+     "f7c76efa-8128-4576-a0ee-06d7ea436cae",
+     "dc833568-bc82-485d-a099-8c59934135cc",
+     "d3ca7223-9103-43c0-8d45-ce5b6d1a8f0b",
+     "c022171a-810a-4667-8d8c-d3d8c8480433",
+     "6a7942bc-4b11-43dd-80c7-96400e91cd73",
+     "f3a25578-d38f-44ad-ba92-3de74442a92a",
+     "0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+     "9ce54723-397a-4006-ab64-f138fb9441d3"
+    ],
+    "importedFieldIDs": [],
+    "indexIDs": [],
+    "createdInAppID": "79e11053-eb5e-46fe-a513-5136bb946b22"
+   }
+  },
+  {
+   "id": "fa21da21-3c56-48f3-a610-4a73790fdb1b",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:38",
+   "json": {
+    "id": "fa21da21-3c56-48f3-a610-4a73790fdb1b",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "status",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Status"
+     }
+    ]
+   }
+  },
+  {
+   "id": "0f230605-b619-444b-bb69-c16c3f684016",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:38",
+   "json": {
+    "id": "0f230605-b619-444b-bb69-c16c3f684016",
+    "type": "field",
+    "key": "LongText",
+    "icon": "align-right",
+    "isImported": 0,
+    "columnName": "reason",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Reason"
+     }
+    ]
+   }
+  },
+  {
+   "id": "14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:38",
+   "json": {
+    "id": "14ff7752-6882-44e8-ab8c-99dd470f1b1b",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "requested_by",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Requested By"
+     }
+    ]
+   }
+  },
+  {
+   "id": "fa54e636-f6ce-485c-a8a0-b957d9c6fdc7",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:38",
+   "json": {
+    "id": "fa54e636-f6ce-485c-a8a0-b957d9c6fdc7",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "assignment_id",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Assignment ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": "15775e03-3e3d-4c78-8d13-58b5f7ce6f4c",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:38",
+   "json": {
+    "id": "15775e03-3e3d-4c78-8d13-58b5f7ce6f4c",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "employee_id",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Employee ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": "385fe9d1-543e-45db-b673-8f0a0d2daf68",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:39",
+   "json": {
+    "id": "385fe9d1-543e-45db-b673-8f0a0d2daf68",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "employee_email",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Employee Email"
+     }
+    ]
+   }
+  },
+  {
+   "id": "73b91fa3-c554-40fe-9411-6017f8698f32",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:39",
+   "json": {
+    "id": "73b91fa3-c554-40fe-9411-6017f8698f32",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "employee_firstname",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Employee First Name"
+     }
+    ]
+   }
+  },
+  {
+   "id": "46a07a2a-4b5b-4354-9b16-4a529102a553",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:39",
+   "json": {
+    "id": "46a07a2a-4b5b-4354-9b16-4a529102a553",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "employee_lastname",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Employee Last Name"
+     }
+    ]
+   }
+  },
+  {
+   "id": "52ba81ca-d94c-482e-8b7a-fbf22768cabb",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:39",
+   "json": {
+    "id": "52ba81ca-d94c-482e-8b7a-fbf22768cabb",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "entity_id",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Entity ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": "683be5fb-2de4-4480-a184-19577f202ea3",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:39",
+   "json": {
+    "id": "683be5fb-2de4-4480-a184-19577f202ea3",
+    "type": "field",
+    "key": "LongText",
+    "icon": "align-right",
+    "isImported": 0,
+    "columnName": "entity_name",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Entity Name"
+     }
+    ]
+   }
+  },
+  {
+   "id": "d66f1a46-61e4-464c-90dd-d0a5e81a80b9",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:39",
+   "json": {
+    "id": "d66f1a46-61e4-464c-90dd-d0a5e81a80b9",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "team_id",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Team ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": "022ba1ea-6a33-479c-9e83-48803c166eb4",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:40",
+   "json": {
+    "id": "022ba1ea-6a33-479c-9e83-48803c166eb4",
+    "type": "field",
+    "key": "LongText",
+    "icon": "align-right",
+    "isImported": 0,
+    "columnName": "team_name",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Team Name"
+     }
+    ]
+   }
+  },
+  {
+   "id": "cc79a6d7-33df-49c8-a296-813b1f13d310",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:40",
+   "json": {
+    "id": "cc79a6d7-33df-49c8-a296-813b1f13d310",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "role_type_id",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Role Type ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": "2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:40",
+   "json": {
+    "id": "2f1b6c97-58f2-45ff-8bba-1cf753d4676e",
+    "type": "field",
+    "key": "LongText",
+    "icon": "align-right",
+    "isImported": 0,
+    "columnName": "job_title",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Job Title"
+     }
+    ]
+   }
+  },
+  {
+   "id": "76d2f107-4e25-4922-813a-eb7ea9a6a61b",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:40",
+   "json": {
+    "id": "76d2f107-4e25-4922-813a-eb7ea9a6a61b",
+    "type": "field",
+    "key": "LongText",
+    "icon": "align-right",
+    "isImported": 0,
+    "columnName": "job_description",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Job Description"
+     }
+    ]
+   }
+  },
+  {
+   "id": "3fa06cbb-09b4-4fa7-85e9-f1fd3abb3117",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:40",
+   "json": {
+    "id": "3fa06cbb-09b4-4fa7-85e9-f1fd3abb3117",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "other_assignment_id",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Other Assignment ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": "f7c76efa-8128-4576-a0ee-06d7ea436cae",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:41",
+   "json": {
+    "id": "f7c76efa-8128-4576-a0ee-06d7ea436cae",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "other_employee_id",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Other Employee ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": "dc833568-bc82-485d-a099-8c59934135cc",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:41",
+   "json": {
+    "id": "dc833568-bc82-485d-a099-8c59934135cc",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "other_entity_id",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Other Entity ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": "d3ca7223-9103-43c0-8d45-ce5b6d1a8f0b",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:41",
+   "json": {
+    "id": "d3ca7223-9103-43c0-8d45-ce5b6d1a8f0b",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "other_team_id",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Other Team ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": "c022171a-810a-4667-8d8c-d3d8c8480433",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:41",
+   "json": {
+    "id": "c022171a-810a-4667-8d8c-d3d8c8480433",
+    "type": "field",
+    "key": "string",
+    "icon": "font",
+    "isImported": 0,
+    "columnName": "other_role_type_id",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Other Role Type ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": "6a7942bc-4b11-43dd-80c7-96400e91cd73",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:41",
+   "json": {
+    "id": "6a7942bc-4b11-43dd-80c7-96400e91cd73",
+    "type": "field",
+    "key": "LongText",
+    "icon": "align-right",
+    "isImported": 0,
+    "columnName": "other_job_title",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Other Job Title"
+     }
+    ]
+   }
+  },
+  {
+   "id": "f3a25578-d38f-44ad-ba92-3de74442a92a",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:40:41",
+   "json": {
+    "id": "f3a25578-d38f-44ad-ba92-3de74442a92a",
+    "type": "field",
+    "key": "LongText",
+    "icon": "align-right",
+    "isImported": 0,
+    "columnName": "other_job_description",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Other Job Description"
+     }
+    ]
+   }
+  },
+  {
+   "id": "0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:45:33",
+   "json": {
+    "id": "0690eb77-2b36-4ee1-bb9e-ec3fe182383a",
+    "type": "field",
+    "key": "LongText",
+    "icon": "align-right",
+    "isImported": 0,
+    "columnName": "other_entity_name",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Other Entity Name"
+     }
+    ]
+   }
+  },
+  {
+   "id": "9ce54723-397a-4006-ab64-f138fb9441d3",
+   "type": "field",
+   "updatedAt": "2026-10-03 14:45:33",
+   "json": {
+    "id": "9ce54723-397a-4006-ab64-f138fb9441d3",
+    "type": "field",
+    "key": "LongText",
+    "icon": "align-right",
+    "isImported": 0,
+    "columnName": "other_team_name",
+    "settings": {
+     "showIcon": 1,
+     "required": 0,
+     "width": 0,
+     "unique": 0,
+     "default": "",
+     "supportMultilingual": 0
+    },
+    "translations": [
+     {
+      "language_code": "en",
+      "label": "Other Team Name"
+     }
+    ]
+   }
+  }
+ ]
+}

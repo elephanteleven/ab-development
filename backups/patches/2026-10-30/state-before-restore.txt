@@ -1,0 +1,50 @@
+State of developer/ before the restore of 2026-10-30 (2026-10-30T04:13:37Z).
+Every uncommitted change below was identical to backups/patches/2026-10-05/ (checked with cmp and git apply --check): migration_manager.patch, tenant_manager.patch, definition_manager.patch, platform_service.patch (each nested AppBuilder), ab-utils.patch (C1, in each service's node_modules). developer/web held only UI build output.
+
+developer/api_sails          branch=staging                    head=7c6e655
+developer/appbuilder         branch=master                     head=00e1dd4
+developer/custom_reports     branch=master                     head=4b65346
+developer/db                 branch=master                     head=a2c0955
+developer/definition_manager branch=master                     head=28cd682
+       M package-lock.json
+developer/file_processor     branch=master                     head=c4b5a12
+developer/log_manager        branch=master                     head=0cdda62
+developer/migration_manager  branch=master                     head=0907d84
+       M app.js
+developer/notification_email branch=master                     head=1e051ee
+developer/process_manager    branch=master                     head=0790f1e
+developer/tenant_manager     branch=master                     head=17224e2
+       M package.json
+developer/web                branch=develop                    head=361cdc46
+       M assets/AppBuilder_platform_plugins_included_index_js.003229f6aad0700a3086.js.map
+       M assets/index.html
+       D assets/pdfjs-vendors-node_modules_pdfjs-dist_webpack_mjs.e177d2c29864fbbc6685.js
+       D assets/pdfjs-vendors-node_modules_pdfjs-dist_webpack_mjs.e177d2c29864fbbc6685.js.map
+       D assets/runtime.b8e3910bd2782769f0f5.js
+       D assets/runtime.b8e3910bd2782769f0f5.js.map
+       M assets/sailsio.bd6942ffde5fc1f7ec30.js.map
+       M assets/tenant/default/HRTeams.js
+       M assets/tenant/default/HRTeams.js.map
+      ?? assets/pdfjs-vendors-node_modules_pdfjs-dist_webpack_mjs.951e5284027d39fe61e2.js
+      ?? assets/pdfjs-vendors-node_modules_pdfjs-dist_webpack_mjs.951e5284027d39fe61e2.js.map
+      ?? assets/runtime.e80c4ee524266bdb68f0.js
+      ?? assets/runtime.e80c4ee524266bdb68f0.js.map
+developer/user_manager       branch=master                     head=fd9d93f
+developer/pwa                branch=master                     head=530e3a0
+developer/ab_platform_web    branch=master                     head=560b6d80
+developer/plugins/ABDesigner branch=master                     head=ca9b449
+developer/plugins/HRTeams    branch=guy/fix-principal-changes  head=28d7b02
+
+developer/appbuilder/AppBuilder head=544b83a core=2ecde31 changed: ABFactory.js package-lock.json 
+developer/custom_reports/AppBuilder head=544b83a core=2ecde31 changed: ABFactory.js package-lock.json 
+developer/definition_manager/AppBuilder head=544b83a core=2ecde31 changed: ABFactory.js package-lock.json 
+developer/file_processor/AppBuilder head=544b83a core=2ecde31 changed: ABFactory.js package-lock.json 
+developer/process_manager/AppBuilder head=544b83a core=2ecde31 changed: ABFactory.js package-lock.json 
+developer/user_manager/AppBuilder head=544b83a core=2ecde31 changed: ABFactory.js package-lock.json 
+developer/ab_platform_web/AppBuilder/core head=2ecde31
+developer/pwa/src/js/AppBuilder/core head=d52cad3
+
+HRTeams local branches:
+  guy/enhancements 2e39ac6 origin/guy/enhancements [ahead 8]
+  guy/fix-principal-changes 28d7b02 origin/guy/fix-principal-changes 
+  master d47738c origin/master 

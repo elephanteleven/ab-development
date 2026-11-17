@@ -1,0 +1,478 @@
+diff --git a/README.md b/README.md
+index 1552cf6..1fecac0 100644
+--- a/README.md
++++ b/README.md
+@@ -83,7 +83,6 @@ ___
+   - [App](#App)
+   - [Favicon](#Favicon)
+   - [Manifest](#Manifest)
+-  - [QR](#QR)
+   - [Version](#Version)
+ - [Multilingual](#Multilingual)
+   - [Missing Label](#Missing-Label)
+@@ -97,8 +96,6 @@ ___
+   - [Timer Start](#Timer-Start)
+   - [Timer Status](#Timer-Status)
+   - [Timer Stop](#Timer-Stop)
+-- [Relay](#Relay)
+-  - [QR Code](#QR-Code)
+ - [Report](#Report)
+   - [View](#View)
+   - [~~Well Invoice~~](#Well-Invoice)
+@@ -932,23 +929,6 @@ ___
+ |----------|------------|---------------------------------------|
+ | html | `HTML` |  |
+   
+-<a name='QR'></a>
+-### QR - `GET` /mobile/qr/:ID
+-[Back to top](#top)
+-
+-
+-<p>Respond with the QR code image for a specified app</p>
+-
+-**Permission:** `None`
+-
+-#### Responses
+-
+-##### Success response - `200`
+-
+-| Name     | Type       | Description                           |
+-|----------|------------|---------------------------------------|
+-| html | `HTML` |  |
+-  
+ <a name='Version'></a>
+ ### Version - `GET` /mobile/version/:ID
+ [Back to top](#top)
+@@ -1216,28 +1196,6 @@ ___
+ |----------|------------|---------------------------------------|
+ | status | `string` | <p><code>&quot;success&quot;</code></p> |
+ 
+-<a name='Relay'></a> 
+-## Relay
+-
+-
+-  
+-<a name='QR-Code'></a>
+-### QR Code - `GET` /relay/user-qr
+-[Back to top](#top)
+-
+-
+-<p>Get a QR code to register the PWA</p>
+-
+-**Permission:** `User`
+-\- Any authenticated user
+-#### Responses
+-
+-##### Success response - `200`
+-
+-| Name     | Type       | Description                           |
+-|----------|------------|---------------------------------------|
+-| image | `image/png` | <p>QR Code</p> |
+-
+ <a name='Report'></a> 
+ ## Report
+ 
+diff --git a/api/controllers/SiteController.js b/api/controllers/SiteController.js
+index 7245529..fa4408f 100644
+--- a/api/controllers/SiteController.js
++++ b/api/controllers/SiteController.js
+@@ -119,7 +119,9 @@ module.exports = {
+          await new Promise((resolve) => {
+             req.ab.serviceRequest(
+                "tenant_manager.config-site",
+-               { relay: sails.config.relay?.enable ?? false },
++               // relay service removed. tenant_manager.config-site still
++               // requires this flag.
++               { relay: false },
+                {
+                   stringResult: true,
+                },
+@@ -222,7 +224,9 @@ module.exports = {
+       // The languages defined in the current tenant for the site.
+ 
+       var configSite = {
+-         relay: sails.config.relay?.enable ?? false,
++         // relay service removed. platform_web shows "Connect Mobile App"
++         // only when this is true.
++         relay: false,
+       };
+       // {obj} configSite
+       // The information details for this site, used by the WEB platform to
+diff --git a/api/controllers/mobile/qr.js b/api/controllers/mobile/qr.js
+deleted file mode 100644
+index 218f931..0000000
+--- a/api/controllers/mobile/qr.js
++++ /dev/null
+@@ -1,59 +0,0 @@
+-/**
+- * mobile/qr.js
+- * @apiDescription Respond with the QR code image for a specified app
+- *
+- * @api {get} /mobile/qr/:ID QR
+- * @apiGroup Mobile
+- * @apiPermission None
+- * @apiSuccess (200) {HTML} html
+- */
+-
+-const URL = require("node:url");
+-
+-// var inputParams = {
+-//    tenant: { string: true, optional: true },
+-// };
+-
+-module.exports = function (req, res) {
+-   req.ab.log("mobile/qr():");
+-
+-   var user = req.ab.user;
+-   if (!user) {
+-      res.ab.reauth();
+-      return;
+-   }
+-   let appID = req.ab.param("ID");
+-   // let tenantID = req.ab.tenantID;
+-
+-   console.log("req.headers[x-forwarded-for]:", req.headers["x-forwarded-for"]);
+-   console.log("req.connection.remoteAddress:", req.connection.remoteAddress);
+-   console.log("req.connection.remotePort:", req.connection.remotePort);
+-
+-   const url = new URL.URL(
+-      req.headers.referer || req.hostname || req.headers["'x-forwarded-host"]
+-   );
+-
+-   // create a new job for the service
+-   let jobData = {
+-      ID: appID,
+-      hostname: url.hostname || req.hostname, // "192.168.88.138:8080", // req.headers["x-forwarded-for"] || req.connection.remoteAddress, // "localhost:8080",
+-      protocol: url.protocol || req.protocol || "http",
+-      port: url.port,
+-   };
+-
+-   // pass the request off to the uService:
+-   req.ab.serviceRequest("relay.app-qr", jobData, (err, imageDataURL) => {
+-      if (err) {
+-         res.ab.error(err, 500);
+-         return;
+-      }
+-
+-      // Convert base64 dataURL into a binary image buffer
+-      let base64Text = imageDataURL.substring(22);
+-      let imageBuffer = Buffer.from(base64Text, "base64");
+-
+-      res.set("Cache-Control", "max-age=0, no-store;");
+-      res.set("Content-Type", "image/png");
+-      res.send(imageBuffer);
+-   });
+-};
+diff --git a/api/controllers/relay/user-qr.js b/api/controllers/relay/user-qr.js
+deleted file mode 100644
+index a8a6e31..0000000
+--- a/api/controllers/relay/user-qr.js
++++ /dev/null
+@@ -1,46 +0,0 @@
+-/**
+- * relay/user-qr.js
+- *
+- *
+- /** 
+-  * @api {GET} /relay/user-qr QR Code
+-  * @apiGroup Relay
+-  * @apiDescription Get a QR code to register the PWA
+-  * @apiPermission User
+-  * @apiSuccess (200) {image/png} image QR Code
+-  */
+-
+-var inputParams = {};
+-
+-// make sure our BasePath is created:
+-module.exports = function (req, res) {
+-   req.ab.log(`relay::user-qr`);
+-
+-   if (
+-      !(req.ab.validUser(/* false */)) ||
+-      !req.ab.validateParameters(inputParams /*, false , valuesToCheck*/)
+-   ) {
+-      // an error message is automatically returned to the client
+-      // so be sure to return here;
+-      return;
+-   }
+-
+-   // There is no data to send. The service just looks at the user UUID of
+-   // the current user.
+-   let jobData = {};
+-
+-   req.ab.serviceRequest("relay.user-qr", jobData, (err, imageDataURL) => {
+-      if (err) {
+-         res.ab.error(err);
+-         return;
+-      }
+-
+-      // Convert base64 dataURL into a binary image buffer
+-      let base64Text = imageDataURL.substring(22);
+-      let imageBuffer = Buffer.from(base64Text, "base64");
+-
+-      res.set("Cache-Control", "max-age=0, no-store;");
+-      res.set("Content-Type", "image/png");
+-      res.send(imageBuffer);
+-   });
+-};
+diff --git a/api/hooks/healthcheck.js b/api/hooks/healthcheck.js
+index a306798..d3b3546 100644
+--- a/api/hooks/healthcheck.js
++++ b/api/hooks/healthcheck.js
+@@ -21,7 +21,6 @@
+  *             // Perform any internal checks if needed.
+  *             // - check DB connection?
+  *             // - check mail server?
+- *             // - check relay server?
+  *             // - throw Error("Your example message") if something is wrong
+  *             // ...
+  *             let message = "OK";
+@@ -82,9 +81,6 @@ const servicesToPing = [
+          params: { users: ["admin"] },
+       },
+    },
+-   {
+-      name: "relay",
+-   },
+    {
+       name: "tenant_manager",
+       test: {
+diff --git a/api/hooks/initPassport.js b/api/hooks/initPassport.js
+index 0639533..7b9c6a5 100644
+--- a/api/hooks/initPassport.js
++++ b/api/hooks/initPassport.js
+@@ -7,7 +7,6 @@ const passport = require("passport");
+ const authCAS = require("../lib/authUserCAS.js");
+ const authLocal = require("../lib/authUserLocal.js");
+ const authOkta = require("../lib/authUserOkta.js");
+-const authRelay = require("../lib/authUserRelay.js");
+ const authToken = require("../lib/authUserToken.js");
+ 
+ 
+@@ -25,7 +24,6 @@ module.exports = function (sails) {
+          // Passport Strategies:
+          authLocal.init();
+          authToken.init();
+-         authRelay.init();
+          if (sails.config.cas?.enabled) {
+             authCAS.init();
+          }
+diff --git a/api/hooks/versionCheck.js b/api/hooks/versionCheck.js
+index 48508a9..b22bbf1 100644
+--- a/api/hooks/versionCheck.js
++++ b/api/hooks/versionCheck.js
+@@ -30,7 +30,6 @@ const servicesToPing = [
+    "log_manager",
+    "notification_email",
+    "process_manager",
+-   "relay",
+    "tenant_manager",
+    "user_manager",
+ ];
+diff --git a/api/lib/authUserRelay.js b/api/lib/authUserRelay.js
+deleted file mode 100644
+index d6f60d3..0000000
+--- a/api/lib/authUserRelay.js
++++ /dev/null
+@@ -1,50 +0,0 @@
+-/**
+- * authRelay
+- *
+- * Checks for and validates a Relay Header:
+- * - authorization: 'relay@@@[accessToken]@@@[SiteUser.uuid]'
+- *
+- */
+-const passport = require("passport");
+-const { Strategy } = require("passport-trusted-header");
+-const authLogger = require("./authLogger.js");
+-
+-module.exports = {
+-   init: () => {
+-      passport.use(
+-         "relay",
+-         new Strategy(
+-            { passReqToCallback: true, headers: ["authorization"] },
+-            (req, { authorization }, done) => {
+-               if (!authorization) return done();
+-               req.ab.log("authUser -> Relay Auth");
+-               const [relay, token, user] = authorization.split("@@@");
+-               if (
+-                  relay === "relay" &&
+-                  sails.config.relay?.mcc?.enabled &&
+-                  token === sails.config.relay.mcc.accessToken
+-               ) {
+-                  sails.helpers.user
+-                     .findWithCache(req, req.ab.tenantID, user)
+-                     .catch((err) => done(err))
+-                     .then((user) => {
+-                        done(null, user);
+-                        authLogger(req, "Relay auth successful");
+-                     });
+-               } else {
+-                  // invalid authorization data:
+-                  const message =
+-                     "api_sails:authUser:Relay Header: Invalid authorization data";
+-                  const err = new Error(message);
+-                  done(err);
+-                  req.ab.notify.developer(err, {
+-                     context: message,
+-                     authorization,
+-                  });
+-                  authLogger(req, "Relay auth FAILED");
+-               }
+-            }
+-         )
+-      );
+-   },
+-};
+diff --git a/api/policies/authUser.js b/api/policies/authUser.js
+index 82777cc..b719a0d 100644
+--- a/api/policies/authUser.js
++++ b/api/policies/authUser.js
+@@ -4,9 +4,7 @@
+  * this will either be from:
+  * 1) Session
+  *    - User prevously authenticated with local auth, okta, or CAS
+- * 2) Relay Header
+- *    - A valid relay header
+- * 3) Auth Token
++ * 2) Auth Token
+  *    - A valud user auth token
+  *
+  * If a user is found it will be set in req.ab.user. This is used elsewhere
+@@ -27,20 +25,16 @@ module.exports = async (req, res, next) => {
+          req.ab.user = req.user;
+          next(null, req.user);
+       } else {
+-         // Check for Relay Header or Auth Token (these don't save to session)
+-         passport.authenticate(
+-            ["relay", "token"],
+-            { session: false },
+-            (err, user) => {
+-               if (user) {
+-                  req.ab.user = user;
+-                  next(null, user);
+-               } else {
+-                  // The user is not logged in, but that's not a problem here
+-                  next();
+-               }
++         // Check for an Auth Token (it doesn't save to session)
++         passport.authenticate("token", { session: false }, (err, user) => {
++            if (user) {
++               req.ab.user = user;
++               next(null, user);
++            } else {
++               // The user is not logged in, but that's not a problem here
++               next();
+             }
+-         )(req, res);
++         })(req, res);
+       }
+    });
+ };
+diff --git a/app_waitMysql.js b/app_waitMysql.js
+index 5a299e6..7721f5c 100644
+--- a/app_waitMysql.js
++++ b/app_waitMysql.js
+@@ -41,7 +41,8 @@ function Connect(cb) {
+          return;
+       }
+       console.log("successful connection to mysql, continuing");
+-      DB.destroy();
++      // end() closes cleanly; destroy() makes MariaDB log "Aborted connection"
++      DB.end(() => {});
+       cb();
+    });
+ }
+diff --git a/config/local.js b/config/local.js
+index 4f1d5dc..7289fa8 100644
+--- a/config/local.js
++++ b/config/local.js
+@@ -20,7 +20,7 @@ module.exports = {
+     * datastores:
+     * Sails style DB connection settings
+     */
+-   // datastores: AB.defaults.datastores(),
++   datastores: AB.defaults.datastores(),
+    /* end datastores */
+ 
+    /**
+@@ -55,31 +55,6 @@ module.exports = {
+       maxBytes: env("FILE_PROCESSOR_MAXBYTES", 10000000),
+    },
+ 
+-   relay: {
+-      // Note that "enable" is in present tense.
+-      enable: env("RELAY_ENABLE", true),
+-
+-      /*************************************************************************/
+-      /* Mobile Comm Center (mcc)                                              */
+-      /* The ab_service_relay sends http requests to ab_api_sails              */
+-      /* and it uses the accessToken as part of its authentication.            */
+-      /* See also: ab_service_relay > ./config/local.js                        */
+-      /*************************************************************************/
+-      mcc: {
+-         /**********************************************************************/
+-         /* enable: {bool} is communicating with our MCC enabled?              */
+-         /**********************************************************************/
+-         // Note that "enabled" is in past tense.
+-         // But "RELAY_ENABLE" is in present tense.
+-         enabled: env("RELAY_ENABLE", true),
+-
+-         /**********************************************************************/
+-         /* accessToken: {string} required accessToken for sails to accept     */
+-         /**********************************************************************/
+-         accessToken: env("RELAY_SERVER_TOKEN", "There is no spoon."),
+-      },
+-   },
+-
+    http: {
+       trustProxy: true,
+    },
+diff --git a/config/routes.js b/config/routes.js
+index 6398f8d..2e28e9e 100644
+--- a/config/routes.js
++++ b/config/routes.js
+@@ -22,15 +22,16 @@ module.exports.routes = {
+    // and user from the url & user sessions if already set
+    // @return {HTML} for the framework to load.
+ 
+-   "get /admin": {
+-      // returns the loader for the Tenant Administration site.
+-      // The TenantID will be gathered as the default specified in the
+-      // config.local.js
+-      // @return {HTML} for the framework to load.
+-      controller: "SiteController",
+-      action: "index",
+-      useTenantID: true,
+-   },
++   // Disabled along with SiteController.index ("/" is served by nginx now):
++   // "get /admin": {
++   //    // returns the loader for the Tenant Administration site.
++   //    // The TenantID will be gathered as the default specified in the
++   //    // config.local.js
++   //    // @return {HTML} for the framework to load.
++   //    controller: "SiteController",
++   //    action: "index",
++   //    useTenantID: true,
++   // },
+ 
+    // Static Resources for our Web Clients
+    "/favicon.ico": "SiteController.favicon",
+@@ -164,8 +165,6 @@ module.exports.routes = {
+    "get /report/:key": "custom_reports/report",
+ 
+    // "/sg": "SiteController.sg", // testing out the SG library
+-   // relay routes:
+-   "get /relay/user-qr": "relay/user-qr",
+ 
+    //
+    // Mobile PWA
+@@ -175,7 +174,6 @@ module.exports.routes = {
+    "get /mobile/app/:ID/favicon.png": "mobile/favicon",
+    "get /mobile/app/:tenantID/:ID/manifest.json": "mobile/manifest",
+    "get /mobile/app/:tenantID/:ID": "mobile/app",
+-   "get /mobile/qr/:ID": "mobile/qr",
+    "get /mobile/preloader/:tenantID/:appID": "mobile/preloader",
+    "get /mobile/definitions/:ID": "mobile/app-defs",
+    "get /mobile/config/settings/:appID": "mobile/config-settings",
